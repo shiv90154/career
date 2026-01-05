@@ -108,6 +108,7 @@ const Layout = ({ children, admin = false, student = false }) => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
+      
       <header className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 shadow-lg sticky top-0 z-50 p-4">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
