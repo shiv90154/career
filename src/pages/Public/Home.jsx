@@ -230,7 +230,7 @@ const Home = () => {
                 {achievements.slice(0, 3).map((achievement, index) => (
                   <div
                     key={index}
-                    className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10"
+                    className="bg-white/5 backdrop-blur-sm rounded-xl p-2 border border-white/10"
                   >
                     <div className="flex items-center space-x-3">
                       <div className="p-2 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg">
@@ -253,7 +253,7 @@ const Home = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   to="/courses"
-                  className="inline-flex items-center justify-center space-x-2 px-8 py-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 font-bold rounded-xl hover:from-yellow-600 hover:to-yellow-700 transform hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-2xl"
+                  className="inline-flex items-center justify-center space-x-2 px-8 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 font-bold rounded-xl hover:from-yellow-600 hover:to-yellow-700 transform hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-2xl"
                 >
                   <span>Explore Courses</span>
                   <ArrowRight size={20} />
