@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { api } from '../../services/api';
+import api from '../../services/api';
 import {
   Calendar, User, Clock, Tag,
   Share2, Facebook, Twitter, Linkedin,

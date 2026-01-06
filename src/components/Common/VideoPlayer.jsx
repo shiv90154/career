@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import YouTube from 'react-youtube';
-import { api } from '../../services/api';
+import api from '../../services/api';
 
 const VideoPlayer = ({ videoId, enrollmentId, videoData }) => {
     const [progress, setProgress] = useState(0);

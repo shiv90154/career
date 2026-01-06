@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
 
     const verifyToken = async () => {
         try {
-            const response = await api.get('/auth/verify');
+            const response = await api.get('/auth/verify.php');
             setUser(response.data.user);
         } catch (error) {
             logout();
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const response = await api.post('/auth/login', { email, password });
+            const response = await api.post('/auth/login.php', { email, password });
             const { token: newToken, user: userData } = response.data;
             
             localStorage.setItem('token', newToken);
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (userData) => {
         try {
-            const response = await api.post('/auth/register', userData);
+            const response = await api.post('/auth/register.php', userData);
             const { token: newToken, user: userData } = response.data;
             
             localStorage.setItem('token', newToken);

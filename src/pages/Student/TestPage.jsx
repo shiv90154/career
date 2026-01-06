@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { api } from '../../services/api';
+import api from '../../services/api';
 import { 
   Clock, AlertCircle, CheckCircle, 
   XCircle, ChevronLeft, ChevronRight,
