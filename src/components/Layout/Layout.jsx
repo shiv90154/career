@@ -1,15 +1,36 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import {
-  Home, BookOpen, FileText, Users, 
-  BarChart, Settings, LogOut, User,
-  Menu, X, ChevronDown, Bell, 
-  Search, Video, Clipboard, Award,
-  Mail, Phone, MapPin, Globe,
-  Facebook, Instagram, Youtube, Linkedin,
-  ChevronRight, Calendar, Clock, Download
-} from 'lucide-react';
+  Home,
+  BookOpen,
+  FileText,
+  Users,
+  BarChart,
+  Settings,
+  LogOut,
+  User,
+  Menu,
+  X,
+  ChevronDown,
+  Bell,
+  Search,
+  Video,
+  Clipboard,
+  Award,
+  Mail,
+  Phone,
+  MapPin,
+  Globe,
+  Facebook,
+  Instagram,
+  Youtube,
+  Linkedin,
+  ChevronRight,
+  Calendar,
+  Clock,
+  Download,
+} from "lucide-react";
 
 const Layout = ({ children, admin = false, student = false }) => {
   const { user, logout } = useAuth();
@@ -18,97 +39,143 @@ const Layout = ({ children, admin = false, student = false }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  
+
   const userDropdownRef = useRef(null);
   const notificationsRef = useRef(null);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(event.target)
+      ) {
         setUserDropdownOpen(false);
       }
-      if (notificationsRef.current && !notificationsRef.current.contains(event.target)) {
+      if (
+        notificationsRef.current &&
+        !notificationsRef.current.contains(event.target)
+      ) {
         setNotificationsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   // Admin Navigation
   const adminNavItems = [
-    { path: '/admin/dashboard', label: 'Dashboard', icon: <Home size={20} /> },
-    { path: '/admin/courses', label: 'Courses', icon: <BookOpen size={20} /> },
-    { path: '/admin/students', label: 'Students', icon: <Users size={20} /> },
-    { path: '/admin/videos', label: 'Videos', icon: <Video size={20} /> },
-    { path: '/admin/tests', label: 'Tests', icon: <Clipboard size={20} /> },
-    { path: '/admin/blogs', label: 'Blogs', icon: <FileText size={20} /> },
-    { path: '/admin/live-classes', label: 'Live Classes', icon: <Users size={20} /> },
-    { path: '/admin/payments', label: 'Payments', icon: <BarChart size={20} /> },
-    { path: '/admin/analytics', label: 'Analytics', icon: <BarChart size={20} /> },
-    { path: '/admin/settings', label: 'Settings', icon: <Settings size={20} /> },
+    { path: "/admin/dashboard", label: "Dashboard", icon: <Home size={20} /> },
+    { path: "/admin/courses", label: "Courses", icon: <BookOpen size={20} /> },
+    { path: "/admin/students", label: "Students", icon: <Users size={20} /> },
+    { path: "/admin/videos", label: "Videos", icon: <Video size={20} /> },
+    { path: "/admin/tests", label: "Tests", icon: <Clipboard size={20} /> },
+    { path: "/admin/blogs", label: "Blogs", icon: <FileText size={20} /> },
+    {
+      path: "/admin/live-classes",
+      label: "Live Classes",
+      icon: <Users size={20} />,
+    },
+    {
+      path: "/admin/payments",
+      label: "Payments",
+      icon: <BarChart size={20} />,
+    },
+    {
+      path: "/admin/analytics",
+      label: "Analytics",
+      icon: <BarChart size={20} />,
+    },
+    {
+      path: "/admin/settings",
+      label: "Settings",
+      icon: <Settings size={20} />,
+    },
   ];
 
   // Student Navigation
   const studentNavItems = [
-    { path: '/student/dashboard', label: 'Dashboard', icon: <Home size={20} /> },
-    { path: '/student/courses', label: 'My Courses', icon: <BookOpen size={20} /> },
-    { path: '/student/tests', label: 'Mock Tests', icon: <Clipboard size={20} /> },
-    { path: '/student/materials', label: 'Study Materials', icon: <FileText size={20} /> },
-    { path: '/student/live-classes', label: 'Live Classes', icon: <Users size={20} /> },
-    { path: '/student/profile', label: 'Profile', icon: <User size={20} /> },
+    {
+      path: "/student/dashboard",
+      label: "Dashboard",
+      icon: <Home size={20} />,
+    },
+    {
+      path: "/student/courses",
+      label: "My Courses",
+      icon: <BookOpen size={20} />,
+    },
+    {
+      path: "/student/tests",
+      label: "Mock Tests",
+      icon: <Clipboard size={20} />,
+    },
+    {
+      path: "/student/materials",
+      label: "Study Materials",
+      icon: <FileText size={20} />,
+    },
+    {
+      path: "/student/live-classes",
+      label: "Live Classes",
+      icon: <Users size={20} />,
+    },
+    { path: "/student/profile", label: "Profile", icon: <User size={20} /> },
   ];
 
   // Public Navigation
   const publicNavItems = [
-    { path: '/', label: 'Home' },
-    { path: '/courses', label: 'Courses' },
-    { path: '/blogs', label: 'Blogs' },
-    { path: '/contact', label: 'Contact' },
-    { path: '/about', label: 'About' },
+    { path: "/", label: "Home" },
+    { path: "/courses", label: "Courses" },
+    { path: "/blogs", label: "Blogs" },
+    { path: "/contact", label: "Contact" },
+    { path: "/about", label: "About" },
   ];
 
-  const navItems = admin ? adminNavItems : student ? studentNavItems : publicNavItems;
+  const navItems = admin
+    ? adminNavItems
+    : student
+    ? studentNavItems
+    : publicNavItems;
 
   // Sample notifications
   const notifications = [
     {
       id: 1,
-      title: 'New video added to Patwari Course',
-      time: '2 hours ago',
+      title: "New video added to Patwari Course",
+      time: "2 hours ago",
       icon: <BookOpen size={16} />,
       unread: true,
-      type: 'course'
+      type: "course",
     },
     {
       id: 2,
-      title: 'Mock test scheduled for tomorrow',
-      time: '1 day ago',
+      title: "Mock test scheduled for tomorrow",
+      time: "1 day ago",
       icon: <Clipboard size={16} />,
       unread: false,
-      type: 'test'
+      type: "test",
     },
     {
       id: 3,
-      title: 'You completed GK Module',
-      time: '3 days ago',
+      title: "You completed GK Module",
+      time: "3 days ago",
       icon: <Award size={16} />,
       unread: false,
-      type: 'achievement'
-    }
+      type: "achievement",
+    },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
-      
+
       <header className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 shadow-lg sticky top-0 z-50 p-4">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -116,9 +183,9 @@ const Layout = ({ children, admin = false, student = false }) => {
             <div className="flex items-center">
               <Link to="/" className="flex items-center space-x-3 group">
                 <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-                  <img 
-                    src="/logo.png" 
-                    alt="Career Path Institute" 
+                  <img
+                    src="/logo.png"
+                    alt="Career Path Institute"
                     className="w-8 h-8 object-contain"
                   />
                 </div>
@@ -142,8 +209,8 @@ const Layout = ({ children, admin = false, student = false }) => {
                     to={item.path}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                       location.pathname === item.path
-                        ? 'bg-white/10 text-white'
-                        : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                        ? "bg-white/10 text-white"
+                        : "text-gray-300 hover:bg-white/5 hover:text-white"
                     }`}
                   >
                     {item.label}
@@ -172,7 +239,9 @@ const Layout = ({ children, admin = false, student = false }) => {
                       <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50">
                         <div className="p-4 border-b border-gray-100">
                           <div className="flex items-center justify-between">
-                            <h3 className="font-semibold text-gray-900">Notifications</h3>
+                            <h3 className="font-semibold text-gray-900">
+                              Notifications
+                            </h3>
                             <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
                               Mark all as read
                             </button>
@@ -183,15 +252,19 @@ const Layout = ({ children, admin = false, student = false }) => {
                             <div
                               key={notification.id}
                               className={`p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors ${
-                                notification.unread ? 'bg-blue-50' : ''
+                                notification.unread ? "bg-blue-50" : ""
                               }`}
                             >
                               <div className="flex items-start space-x-3">
-                                <div className={`p-2 rounded-lg ${
-                                  notification.type === 'course' ? 'bg-blue-100 text-blue-600' :
-                                  notification.type === 'test' ? 'bg-purple-100 text-purple-600' :
-                                  'bg-green-100 text-green-600'
-                                }`}>
+                                <div
+                                  className={`p-2 rounded-lg ${
+                                    notification.type === "course"
+                                      ? "bg-blue-100 text-blue-600"
+                                      : notification.type === "test"
+                                      ? "bg-purple-100 text-purple-600"
+                                      : "bg-green-100 text-green-600"
+                                  }`}
+                                >
                                   {notification.icon}
                                 </div>
                                 <div className="flex-1 min-w-0">
@@ -211,7 +284,11 @@ const Layout = ({ children, admin = false, student = false }) => {
                           ))}
                         </div>
                         <Link
-                          to={admin ? '/admin/notifications' : '/student/notifications'}
+                          to={
+                            admin
+                              ? "/admin/notifications"
+                              : "/student/notifications"
+                          }
                           className="block p-4 text-center text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-gray-50 border-t border-gray-100"
                         >
                           View all notifications
@@ -228,8 +305,8 @@ const Layout = ({ children, admin = false, student = false }) => {
                     >
                       <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                         {user.profile_image ? (
-                          <img 
-                            src={user.profile_image} 
+                          <img
+                            src={user.profile_image}
                             alt={user.full_name}
                             className="w-full h-full rounded-full object-cover"
                           />
@@ -245,10 +322,10 @@ const Layout = ({ children, admin = false, student = false }) => {
                           {user.role}
                         </p>
                       </div>
-                      <ChevronDown 
-                        size={16} 
+                      <ChevronDown
+                        size={16}
                         className={`text-gray-400 transition-transform duration-200 ${
-                          userDropdownOpen ? 'rotate-180' : ''
+                          userDropdownOpen ? "rotate-180" : ""
                         }`}
                       />
                     </button>
@@ -258,7 +335,7 @@ const Layout = ({ children, admin = false, student = false }) => {
                         <div className="p-4 border-b border-gray-100">
                           <div className="flex items-center space-x-3">
                             <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-white font-semibold">
-                              {user.full_name?.charAt(0) || 'U'}
+                              {user.full_name?.charAt(0) || "U"}
                             </div>
                             <div className="flex-1 min-w-0">
                               <h4 className="font-semibold text-gray-900 truncate">
@@ -352,9 +429,13 @@ const Layout = ({ children, admin = false, student = false }) => {
 
           {/* Mobile Navigation for Public */}
           {!admin && !student && (
-            <div className={`md:hidden transition-all duration-300 ${
-              mobileMenuOpen ? 'max-h-64 opacity-100 py-4' : 'max-h-0 opacity-0 overflow-hidden'
-            }`}>
+            <div
+              className={`md:hidden transition-all duration-300 ${
+                mobileMenuOpen
+                  ? "max-h-64 opacity-100 py-4"
+                  : "max-h-0 opacity-0 overflow-hidden"
+              }`}
+            >
               <div className="flex flex-col space-y-2">
                 {publicNavItems.map((item) => (
                   <Link
@@ -362,8 +443,8 @@ const Layout = ({ children, admin = false, student = false }) => {
                     to={item.path}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                       location.pathname === item.path
-                        ? 'bg-white/10 text-white'
-                        : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                        ? "bg-white/10 text-white"
+                        : "text-gray-300 hover:bg-white/5 hover:text-white"
                     }`}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -385,10 +466,10 @@ const Layout = ({ children, admin = false, student = false }) => {
             <aside className="hidden md:flex flex-col w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white shadow-xl">
               <div className="p-6 border-b border-gray-700">
                 <h2 className="text-xl font-bold text-white">
-                  {admin ? 'Admin Panel' : 'Student Portal'}
+                  {admin ? "Admin Panel" : "Student Portal"}
                 </h2>
                 <p className="text-sm text-gray-400 mt-1">
-                  {admin ? 'Management Dashboard' : 'Learning Dashboard'}
+                  {admin ? "Management Dashboard" : "Learning Dashboard"}
                 </p>
               </div>
 
@@ -399,18 +480,25 @@ const Layout = ({ children, admin = false, student = false }) => {
                     to={item.path}
                     className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
                       location.pathname.startsWith(item.path)
-                        ? 'bg-gradient-to-r from-yellow-500/20 to-yellow-600/10 text-yellow-400 border-l-4 border-yellow-500'
-                        : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                        ? "bg-gradient-to-r from-yellow-500/20 to-yellow-600/10 text-yellow-400 border-l-4 border-yellow-500"
+                        : "text-gray-300 hover:bg-white/5 hover:text-white"
                     }`}
                   >
-                    <div className={`${
-                      location.pathname.startsWith(item.path) ? 'text-yellow-400' : 'text-gray-400'
-                    }`}>
+                    <div
+                      className={`${
+                        location.pathname.startsWith(item.path)
+                          ? "text-yellow-400"
+                          : "text-gray-400"
+                      }`}
+                    >
                       {item.icon}
                     </div>
                     <span className="font-medium">{item.label}</span>
                     {location.pathname.startsWith(item.path) && (
-                      <ChevronRight size={16} className="ml-auto text-yellow-400" />
+                      <ChevronRight
+                        size={16}
+                        className="ml-auto text-yellow-400"
+                      />
                     )}
                   </Link>
                 ))}
@@ -428,8 +516,12 @@ const Layout = ({ children, admin = false, student = false }) => {
 
               <div className="p-4 border-t border-gray-700">
                 <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-4">
-                  <h4 className="font-bold text-white">Career Path Institute</h4>
-                  <p className="text-sm text-gray-400 mt-1">Shimla, Himachal Pradesh</p>
+                  <h4 className="font-bold text-white">
+                    Career Path Institute
+                  </h4>
+                  <p className="text-sm text-gray-400 mt-1">
+                    Shimla, Himachal Pradesh
+                  </p>
                   <div className="mt-3 flex items-center space-x-2 text-xs text-gray-400">
                     <Mail size={12} />
                     <span>info@thecareerspathway.com</span>
@@ -439,15 +531,20 @@ const Layout = ({ children, admin = false, student = false }) => {
             </aside>
 
             {/* Mobile Sidebar */}
-            <div className={`fixed inset-0 z-40 md:hidden transition-transform duration-300 ${
-              mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-            }`}>
-              <div className="absolute inset-0 bg-black/50" onClick={() => setMobileMenuOpen(false)} />
+            <div
+              className={`fixed inset-0 z-40 md:hidden transition-transform duration-300 ${
+                mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+              }`}
+            >
+              <div
+                className="absolute inset-0 bg-black/50"
+                onClick={() => setMobileMenuOpen(false)}
+              />
               <div className="absolute inset-y-0 left-0 w-64 bg-gradient-to-b from-gray-900 to-gray-800 shadow-xl overflow-y-auto">
                 <div className="p-6 border-b border-gray-700">
                   <div className="flex items-center justify-between">
                     <h2 className="text-xl font-bold text-white">
-                      {admin ? 'Admin Panel' : 'Student Portal'}
+                      {admin ? "Admin Panel" : "Student Portal"}
                     </h2>
                     <button
                       onClick={() => setMobileMenuOpen(false)}
@@ -465,8 +562,8 @@ const Layout = ({ children, admin = false, student = false }) => {
                       to={item.path}
                       className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors ${
                         location.pathname.startsWith(item.path)
-                          ? 'bg-gradient-to-r from-yellow-500/20 to-yellow-600/10 text-yellow-400'
-                          : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                          ? "bg-gradient-to-r from-yellow-500/20 to-yellow-600/10 text-yellow-400"
+                          : "text-gray-300 hover:bg-white/5 hover:text-white"
                       }`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -488,8 +585,12 @@ const Layout = ({ children, admin = false, student = false }) => {
 
                 <div className="p-4">
                   <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-4">
-                    <h4 className="font-bold text-white">Career Path Institute</h4>
-                    <p className="text-sm text-gray-400 mt-1">Shimla, Himachal Pradesh</p>
+                    <h4 className="font-bold text-white">
+                      Career Path Institute
+                    </h4>
+                    <p className="text-sm text-gray-400 mt-1">
+                      Shimla, Himachal Pradesh
+                    </p>
                   </div>
                 </div>
               </div>
@@ -498,10 +599,8 @@ const Layout = ({ children, admin = false, student = false }) => {
         )}
 
         {/* Main Content */}
-        <main className={`flex-1 ${(admin || student) ? 'md:ml-0' : ''}`}>
-          <div className="min-h-[calc(100vh-140px)]">
-            {children}
-          </div>
+        <main className={`flex-1 ${admin || student ? "md:ml-0" : ""}`}>
+          <div className="min-h-[calc(100vh-140px)]">{children}</div>
         </main>
       </div>
 
@@ -513,32 +612,49 @@ const Layout = ({ children, admin = false, student = false }) => {
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center">
-                  <img 
-                    src="/logo.png" 
-                    alt="Career Path Institute" 
+                  <img
+                    src="/logo.png"
+                    alt="Career Path Institute"
                     className="w-10 h-10 object-contain"
                   />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white">Career Path Institute</h3>
-                  <span className="text-yellow-400 text-sm font-medium">Shimla</span>
+                  <h3 className="text-xl font-bold text-white">
+                    Career Path Institute
+                  </h3>
+                  <span className="text-yellow-400 text-sm font-medium">
+                    Shimla
+                  </span>
                 </div>
               </div>
               <p className="text-gray-400 leading-relaxed">
-                Premier coaching institute for competitive exam preparation in Shimla. 
-                Providing quality education for government job aspirants since 2015.
+                Premier coaching institute for competitive exam preparation in
+                Shimla. Providing quality education for government job aspirants
+                since 2015.
               </p>
               <div className="flex space-x-4">
-                <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors">
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors"
+                >
                   <Facebook size={18} />
                 </a>
-                <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors">
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors"
+                >
                   <Instagram size={18} />
                 </a>
-                <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors">
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors"
+                >
                   <Youtube size={18} />
                 </a>
-                <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors">
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors"
+                >
                   <Linkedin size={18} />
                 </a>
               </div>
@@ -556,7 +672,10 @@ const Layout = ({ children, admin = false, student = false }) => {
                       to={item.path}
                       className="text-gray-400 hover:text-yellow-400 transition-colors flex items-center group"
                     >
-                      <ChevronRight size={14} className="mr-2 group-hover:text-yellow-400" />
+                      <ChevronRight
+                        size={14}
+                        className="mr-2 group-hover:text-yellow-400"
+                      />
                       {item.label}
                     </Link>
                   </li>
@@ -571,27 +690,42 @@ const Layout = ({ children, admin = false, student = false }) => {
               </h4>
               <ul className="space-y-3">
                 <li>
-                  <Link to="/courses/patwari" className="text-gray-400 hover:text-yellow-400 transition-colors">
+                  <Link
+                    to="/courses/patwari"
+                    className="text-gray-400 hover:text-yellow-400 transition-colors"
+                  >
                     Patwari Exam Preparation
                   </Link>
                 </li>
                 <li>
-                  <Link to="/courses/ssc" className="text-gray-400 hover:text-yellow-400 transition-colors">
+                  <Link
+                    to="/courses/ssc"
+                    className="text-gray-400 hover:text-yellow-400 transition-colors"
+                  >
                     SSC CGL & CHSL
                   </Link>
                 </li>
                 <li>
-                  <Link to="/courses/banking" className="text-gray-400 hover:text-yellow-400 transition-colors">
+                  <Link
+                    to="/courses/banking"
+                    className="text-gray-400 hover:text-yellow-400 transition-colors"
+                  >
                     Banking Exams (PO/Clerk)
                   </Link>
                 </li>
                 <li>
-                  <Link to="/courses/railway" className="text-gray-400 hover:text-yellow-400 transition-colors">
+                  <Link
+                    to="/courses/railway"
+                    className="text-gray-400 hover:text-yellow-400 transition-colors"
+                  >
                     Railway Group D & NTPC
                   </Link>
                 </li>
                 <li>
-                  <Link to="/courses/teaching" className="text-gray-400 hover:text-yellow-400 transition-colors">
+                  <Link
+                    to="/courses/teaching"
+                    className="text-gray-400 hover:text-yellow-400 transition-colors"
+                  >
                     Teaching (HP TET, CTET)
                   </Link>
                 </li>
@@ -605,24 +739,38 @@ const Layout = ({ children, admin = false, student = false }) => {
               </h4>
               <ul className="space-y-4">
                 <li className="flex items-start space-x-3">
-                  <MapPin size={18} className="text-yellow-400 mt-1 flex-shrink-0" />
-                  <span className="text-gray-400">Shimla, Himachal Pradesh, India</span>
+                  <MapPin
+                    size={18}
+                    className="text-yellow-400 mt-1 flex-shrink-0"
+                  />
+                  <span className="text-gray-400">
+                    Shimla, Himachal Pradesh, India
+                  </span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <Mail size={18} className="text-yellow-400 flex-shrink-0" />
-                  <a href="mailto:info@thecareerspathway.com" className="text-gray-400 hover:text-yellow-400 transition-colors">
+                  <a
+                    href="mailto:info@thecareerspathway.com"
+                    className="text-gray-400 hover:text-yellow-400 transition-colors"
+                  >
                     info@thecareerspathway.com
                   </a>
                 </li>
                 <li className="flex items-center space-x-3">
                   <Phone size={18} className="text-yellow-400 flex-shrink-0" />
-                  <a href="tel:+911234567890" className="text-gray-400 hover:text-yellow-400 transition-colors">
+                  <a
+                    href="tel:+911234567890"
+                    className="text-gray-400 hover:text-yellow-400 transition-colors"
+                  >
                     +91 1234567890
                   </a>
                 </li>
                 <li className="flex items-center space-x-3">
                   <Globe size={18} className="text-yellow-400 flex-shrink-0" />
-                  <a href="https://www.thecareerspathway.com" className="text-gray-400 hover:text-yellow-400 transition-colors">
+                  <a
+                    href="https://www.thecareerspathway.com"
+                    className="text-gray-400 hover:text-yellow-400 transition-colors"
+                  >
                     www.thecareerspathway.com
                   </a>
                 </li>
@@ -641,23 +789,34 @@ const Layout = ({ children, admin = false, student = false }) => {
           <div className="mt-12 pt-8 border-t border-gray-700">
             <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
               <p className="text-gray-400 text-sm">
-                &copy; {new Date().getFullYear()} Career Path Institute - Shimla. All rights reserved.
+                &copy; {new Date().getFullYear()} Career Path Institute -
+                Shimla. All rights reserved.
               </p>
               <div className="flex items-center space-x-6">
-                <Link to="/privacy" className="text-gray-400 hover:text-yellow-400 text-sm transition-colors">
+                <Link
+                  to="/privacy"
+                  className="text-gray-400 hover:text-yellow-400 text-sm transition-colors"
+                >
                   Privacy Policy
                 </Link>
-                <Link to="/terms" className="text-gray-400 hover:text-yellow-400 text-sm transition-colors">
+                <Link
+                  to="/terms"
+                  className="text-gray-400 hover:text-yellow-400 text-sm transition-colors"
+                >
                   Terms of Service
                 </Link>
-                <Link to="/refund" className="text-gray-400 hover:text-yellow-400 text-sm transition-colors">
+                <Link
+                  to="/refund"
+                  className="text-gray-400 hover:text-yellow-400 text-sm transition-colors"
+                >
                   Refund Policy
                 </Link>
               </div>
             </div>
             <div className="mt-4 text-center">
               <p className="text-xs text-gray-500">
-                Recognized by the Government of Himachal Pradesh | GSTIN: 02XXXXXXXXXXXX
+                Recognized by the Government of Himachal Pradesh | GSTIN:
+                02XXXXXXXXXXXX
               </p>
             </div>
           </div>
