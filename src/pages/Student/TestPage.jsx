@@ -125,44 +125,83 @@ const TestPage = () => {
 
   if (!testStarted) {
     return (
-      <div className="test-instructions">
-        <div className="instructions-card">
-          <h2>{test.title}</h2>
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-4">
+        <div className="max-w-4xl w-full bg-white rounded-2xl shadow-xl p-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center border-b pb-4">
+            {test.title}
+          </h2>
           
-          <div className="test-info">
-            <div className="info-section">
-              <h3>Instructions</h3>
-              <ul className="instructions-list">
-                <li>Total Questions: {test.total_questions}</li>
-                <li>Duration: {test.duration_minutes} minutes</li>
-                <li>Passing Score: {test.passing_score}%</li>
-                <li>Each question carries equal marks</li>
-                <li>There is no negative marking</li>
-                <li>You cannot go back after submitting</li>
-                <li>Test will auto-submit when time ends</li>
+          <div className="grid md:grid-cols-2 gap-8 mb-8">
+            <div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b">
+                Instructions
+              </h3>
+              <ul className="space-y-3">
+                <li className="flex items-start">
+                  <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  <span className="text-gray-700">Total Questions: <span className="font-semibold">{test.total_questions}</span></span>
+                </li>
+                <li className="flex items-start">
+                  <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  <span className="text-gray-700">Duration: <span className="font-semibold">{test.duration_minutes} minutes</span></span>
+                </li>
+                <li className="flex items-start">
+                  <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  <span className="text-gray-700">Passing Score: <span className="font-semibold">{test.passing_score}%</span></span>
+                </li>
+                <li className="flex items-start">
+                  <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  <span className="text-gray-700">Each question carries equal marks</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  <span className="text-gray-700">There is no negative marking</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  <span className="text-gray-700">You cannot go back after submitting</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  <span className="text-gray-700">Test will auto-submit when time ends</span>
+                </li>
               </ul>
             </div>
 
-            <div className="info-section">
-              <h3>Important Notes</h3>
-              <div className="notes">
-                <p><AlertCircle size={16} /> Do not refresh the page during the test</p>
-                <p><AlertCircle size={16} /> Ensure stable internet connection</p>
-                <p><AlertCircle size={16} /> Use the flag feature to mark questions for review</p>
-                <p><AlertCircle size={16} /> You can navigate between questions anytime</p>
+            <div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b">
+                Important Notes
+              </h3>
+              <div className="space-y-4">
+                <div className="flex items-start">
+                  <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5 mr-3 flex-shrink-0" />
+                  <p className="text-gray-700">Do not refresh the page during the test</p>
+                </div>
+                <div className="flex items-start">
+                  <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5 mr-3 flex-shrink-0" />
+                  <p className="text-gray-700">Ensure stable internet connection</p>
+                </div>
+                <div className="flex items-start">
+                  <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5 mr-3 flex-shrink-0" />
+                  <p className="text-gray-700">Use the flag feature to mark questions for review</p>
+                </div>
+                <div className="flex items-start">
+                  <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5 mr-3 flex-shrink-0" />
+                  <p className="text-gray-700">You can navigate between questions anytime</p>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="action-buttons">
+          <div className="flex justify-between pt-6 border-t">
             <button 
-              className="btn btn-outline"
+              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
               onClick={() => navigate(-1)}
             >
               Go Back
             </button>
             <button 
-              className="btn btn-primary"
+              className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-md"
               onClick={startTest}
             >
               Start Test
@@ -176,123 +215,152 @@ const TestPage = () => {
   const currentQuestionData = questions[currentQuestion];
 
   return (
-    <div className="test-page">
+    <div className="min-h-screen bg-gray-50">
       {/* Test Header */}
-      <div className="test-header">
-        <div className="test-title">
-          <h2>{test.title}</h2>
-          <span className="question-count">
-            Question {currentQuestion + 1} of {questions.length}
-          </span>
-        </div>
-        
-        <div className="test-timer">
-          <Clock size={20} />
-          <span className="time">{formatTime(timeLeft)}</span>
-          <div className="timer-warning">
-            {timeLeft < 300 && <AlertCircle size={16} color="#D90000" />}
+      <div className="sticky top-0 z-10 bg-white border-b shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="flex items-center space-x-4">
+            <h2 className="text-xl font-bold text-gray-900">{test.title}</h2>
+            <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+              Question {currentQuestion + 1} of {questions.length}
+            </span>
+          </div>
+          
+          <div className="flex items-center space-x-3 bg-red-50 px-4 py-2 rounded-lg">
+            <Clock className="w-5 h-5 text-red-600" />
+            <span className={`text-2xl font-bold ${timeLeft < 300 ? 'text-red-600' : 'text-gray-900'}`}>
+              {formatTime(timeLeft)}
+            </span>
+            {timeLeft < 300 && (
+              <AlertCircle className="w-5 h-5 text-red-600 animate-pulse" />
+            )}
           </div>
         </div>
       </div>
 
-      <div className="test-container">
+      <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: Question Navigator */}
-        <div className="question-navigator">
-          <h4>Questions</h4>
-          <div className="question-grid">
-            {questions.map((question, index) => (
-              <button
-                key={question.id}
-                className={`question-btn 
-                  ${index === currentQuestion ? 'active' : ''}
-                  ${answers[question.id] ? 'answered' : ''}
-                  ${flagged.has(question.id) ? 'flagged' : ''}
-                `}
-                onClick={() => handleQuestionNav(index)}
-              >
-                {index + 1}
-                {flagged.has(question.id) && (
-                  <Flag size={10} />
-                )}
-              </button>
-            ))}
-          </div>
-          
-          <div className="legend">
-            <div className="legend-item">
-              <div className="answered"></div>
-              <span>Answered</span>
+        <div className="lg:col-span-1">
+          <div className="bg-white rounded-xl shadow-md p-6 sticky top-20">
+            <h4 className="text-lg font-semibold text-gray-900 mb-4">Questions</h4>
+            <div className="grid grid-cols-5 md:grid-cols-6 lg:grid-cols-4 gap-2 mb-6">
+              {questions.map((question, index) => (
+                <button
+                  key={question.id}
+                  className={`relative h-10 rounded-lg flex items-center justify-center font-medium transition-all
+                    ${index === currentQuestion 
+                      ? 'bg-blue-600 text-white ring-2 ring-blue-300' 
+                      : answers[question.id] 
+                        ? 'bg-green-100 text-green-800 border border-green-200' 
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }
+                    ${flagged.has(question.id) ? 'ring-2 ring-amber-300 ring-offset-1' : ''}
+                  `}
+                  onClick={() => handleQuestionNav(index)}
+                >
+                  {index + 1}
+                  {flagged.has(question.id) && (
+                    <Flag className="absolute -top-1 -right-1 w-3 h-3 text-amber-500" />
+                  )}
+                </button>
+              ))}
             </div>
-            <div className="legend-item">
-              <div className="flagged"></div>
-              <span>Flagged</span>
-            </div>
-            <div className="legend-item">
-              <div className="current"></div>
-              <span>Current</span>
+            
+            <div className="space-y-3 pt-4 border-t">
+              <div className="flex items-center">
+                <div className="w-4 h-4 bg-green-100 border border-green-300 rounded mr-2"></div>
+                <span className="text-sm text-gray-600">Answered</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-4 h-4 border-2 border-amber-300 rounded mr-2"></div>
+                <span className="text-sm text-gray-600">Flagged</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-4 h-4 bg-blue-600 rounded mr-2"></div>
+                <span className="text-sm text-gray-600">Current</span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Center: Question Area */}
-        <div className="question-area">
-          <div className="question-card">
-            <div className="question-header">
-              <h3>Question {currentQuestion + 1}</h3>
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+            <div className="flex justify-between items-start mb-6">
+              <h3 className="text-xl font-bold text-gray-900">Question {currentQuestion + 1}</h3>
               <button 
-                className={`flag-btn ${flagged.has(currentQuestionData.id) ? 'active' : ''}`}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors
+                  ${flagged.has(currentQuestionData.id) 
+                    ? 'bg-amber-50 text-amber-700 border border-amber-200' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
                 onClick={() => toggleFlag(currentQuestionData.id)}
               >
-                <Flag size={16} />
-                {flagged.has(currentQuestionData.id) ? 'Flagged' : 'Flag for Review'}
+                <Flag className="w-4 h-4" />
+                <span>{flagged.has(currentQuestionData.id) ? 'Flagged' : 'Flag for Review'}</span>
               </button>
             </div>
             
-            <div className="question-text">
-              <p>{currentQuestionData.question_text}</p>
+            <div className="mb-8">
+              <p className="text-lg text-gray-800 leading-relaxed">
+                {currentQuestionData.question_text}
+              </p>
             </div>
 
-            <div className="options-list">
+            <div className="space-y-3 mb-6">
               {['a', 'b', 'c', 'd'].map((option) => (
                 <div 
                   key={option}
-                  className={`option-item ${answers[currentQuestionData.id] === option ? 'selected' : ''}`}
+                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all hover:shadow-sm
+                    ${answers[currentQuestionData.id] === option 
+                      ? 'border-blue-500 bg-blue-50' 
+                      : 'border-gray-200 hover:border-gray-300'
+                    }`}
                   onClick={() => handleAnswerSelect(currentQuestionData.id, option)}
                 >
-                  <div className="option-letter">
-                    {option.toUpperCase()}
+                  <div className="flex items-center">
+                    <div className={`w-10 h-10 flex items-center justify-center rounded-lg mr-4 font-bold
+                      ${answers[currentQuestionData.id] === option 
+                        ? 'bg-blue-600 text-white' 
+                        : 'bg-gray-100 text-gray-700'
+                      }`}
+                    >
+                      {option.toUpperCase()}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-gray-800">
+                        {currentQuestionData[`option_${option}`]}
+                      </p>
+                    </div>
+                    {answers[currentQuestionData.id] === option && (
+                      <CheckCircle className="w-5 h-5 text-green-500 ml-3" />
+                    )}
                   </div>
-                  <div className="option-text">
-                    {currentQuestionData[`option_${option}`]}
-                  </div>
-                  {answers[currentQuestionData.id] === option && (
-                    <CheckCircle size={16} color="#10B981" />
-                  )}
                 </div>
               ))}
             </div>
 
-            <div className="question-footer">
-              <div className="marks-info">
-                <span>Marks: {currentQuestionData.marks}</span>
-              </div>
+            <div className="pt-4 border-t">
+              <span className="inline-block bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm font-medium">
+                Marks: {currentQuestionData.marks}
+              </span>
             </div>
           </div>
 
           {/* Navigation Buttons */}
-          <div className="navigation-buttons">
+          <div className="flex justify-between items-center">
             <button 
-              className="btn btn-outline"
+              className="flex items-center space-x-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={() => handleQuestionNav(currentQuestion - 1)}
               disabled={currentQuestion === 0}
             >
-              <ChevronLeft size={16} />
-              Previous
+              <ChevronLeft className="w-4 h-4" />
+              <span>Previous</span>
             </button>
             
-            <div className="center-buttons">
+            <div className="flex items-center space-x-4">
               <button 
-                className="btn btn-outline"
+                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                 onClick={() => handleAnswerSelect(currentQuestionData.id, null)}
               >
                 Clear Response
@@ -300,20 +368,20 @@ const TestPage = () => {
               
               {currentQuestion < questions.length - 1 ? (
                 <button 
-                  className="btn btn-primary"
+                  className="flex items-center space-x-2 px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                   onClick={() => handleQuestionNav(currentQuestion + 1)}
                 >
-                  Next
-                  <ChevronRight size={16} />
+                  <span>Next</span>
+                  <ChevronRight className="w-4 h-4" />
                 </button>
               ) : (
                 <button 
-                  className="btn btn-primary"
+                  className="flex items-center space-x-2 px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={handleSubmit}
                   disabled={submitting}
                 >
-                  {submitting ? 'Submitting...' : 'Submit Test'}
-                  <Send size={16} />
+                  <span>{submitting ? 'Submitting...' : 'Submit Test'}</span>
+                  <Send className="w-4 h-4" />
                 </button>
               )}
             </div>
@@ -321,54 +389,56 @@ const TestPage = () => {
         </div>
 
         {/* Right: Summary */}
-        <div className="test-summary">
-          <h4>Test Summary</h4>
-          
-          <div className="summary-stats">
-            <div className="stat">
-              <span className="stat-label">Answered</span>
-              <span className="stat-value">
-                {Object.keys(answers).length}/{questions.length}
-              </span>
+        <div className="lg:col-span-3 lg:col-start-1 lg:row-start-2 xl:col-span-1 xl:col-start-3 xl:row-start-1">
+          <div className="bg-white rounded-xl shadow-md p-6 sticky top-20">
+            <h4 className="text-lg font-semibold text-gray-900 mb-6">Test Summary</h4>
+            
+            <div className="grid grid-cols-3 gap-4 mb-6">
+              <div className="bg-green-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-600 mb-1">Answered</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {Object.keys(answers).length}/{questions.length}
+                </p>
+              </div>
+              <div className="bg-amber-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-600 mb-1">Flagged</p>
+                <p className="text-2xl font-bold text-gray-900">{flagged.size}</p>
+              </div>
+              <div className={`p-4 rounded-lg ${timeLeft < 300 ? 'bg-red-50' : 'bg-blue-50'}`}>
+                <p className="text-sm text-gray-600 mb-1">Time Left</p>
+                <p className={`text-2xl font-bold ${timeLeft < 300 ? 'text-red-600' : 'text-gray-900'}`}>
+                  {formatTime(timeLeft)}
+                </p>
+              </div>
             </div>
-            <div className="stat">
-              <span className="stat-label">Flagged</span>
-              <span className="stat-value">{flagged.size}</span>
-            </div>
-            <div className="stat">
-              <span className="stat-label">Time Left</span>
-              <span className="stat-value">{formatTime(timeLeft)}</span>
-            </div>
-          </div>
 
-          <div className="time-warning">
             {timeLeft < 300 && (
-              <div className="warning-message">
-                <AlertCircle size={16} />
-                <span>Less than 5 minutes remaining!</span>
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div className="flex items-center space-x-2">
+                  <AlertCircle className="w-5 h-5 text-red-600 animate-pulse" />
+                  <span className="text-red-700 font-medium">Less than 5 minutes remaining!</span>
+                </div>
               </div>
             )}
-          </div>
 
-          <button 
-            className="btn btn-primary submit-btn"
-            onClick={handleSubmit}
-            disabled={submitting}
-          >
-            {submitting ? (
-              <LoadingSpinner small />
-            ) : (
-              <>
-                <Send size={16} />
-                Submit Test
-              </>
-            )}
-          </button>
+            <button 
+              className="w-full flex items-center justify-center space-x-2 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium mb-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleSubmit}
+              disabled={submitting}
+            >
+              {submitting ? (
+                <LoadingSpinner small />
+              ) : (
+                <>
+                  <Send className="w-5 h-5" />
+                  <span>Submit Test</span>
+                </>
+              )}
+            </button>
 
-          <div className="quick-actions">
-            <button className="action-btn">
-              <Save size={16} />
-              Save Progress
+            <button className="w-full flex items-center justify-center space-x-2 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+              <Save className="w-4 h-4" />
+              <span>Save Progress</span>
             </button>
           </div>
         </div>

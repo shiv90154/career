@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import LoadingSpinner from '../../components/Common/LoadingSpinner';
 import VideoPlayer from '../../components/Common/VideoPlayer';
-
+import "./CoursePlayer.css"
 const CoursePlayer = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
