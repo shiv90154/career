@@ -176,27 +176,20 @@ const Layout = ({ children, admin = false, student = false }) => {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
 
-      <header className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 shadow-lg sticky top-0 z-50 p-4">
+      <header className="bg-gray-200 shadow-lg sticky top-0 z-50 p-4">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center">
               <Link to="/" className="flex items-center space-x-3 group">
-                <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
+                <div className=" flex items-center justify-center ">
                   <img
-                    src="/logo.png"
+                    src="public/Images/logo-notgood.png"
                     alt="Career Path Institute"
-                    className="w-8 h-8 object-contain"
+                    className="w-50 h-21 "
                   />
                 </div>
-                <div className="hidden sm:block">
-                  <h1 className="text-white font-bold text-lg leading-tight">
-                    Career Path Institute
-                  </h1>
-                  <span className="text-yellow-400 text-xs font-medium tracking-wide">
-                    Shimla
-                  </span>
-                </div>
+               
               </Link>
             </div>
 
@@ -207,10 +200,10 @@ const Layout = ({ children, admin = false, student = false }) => {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    className={`px-4 py-2 rounded-lg text-[15px] font-medium  duration-200 ${
                       location.pathname === item.path
-                        ? "bg-white/10 text-white"
-                        : "text-gray-300 hover:bg-white/5 hover:text-white"
+                        ? "bg-white/3 text-black-200"
+                        : "text-blue-900 hover:bg-black/9 hover:text-black"
                     }`}
                   >
                     {item.label}
@@ -402,7 +395,7 @@ const Layout = ({ children, admin = false, student = false }) => {
                 <div className="flex items-center space-x-3">
                   <Link
                     to="/login"
-                    className="px-4 py-2 text-sm font-medium text-white hover:bg-white/10 rounded-lg transition-colors"
+                    className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-blue-800 to-blue-900 text-white  hover:from-blue-700 hover:to-blue-900 rounded-lg transition-colors"
                   >
                     Login
                   </Link>
@@ -670,7 +663,7 @@ const Layout = ({ children, admin = false, student = false }) => {
                   <li key={item.path}>
                     <Link
                       to={item.path}
-                      className="text-gray-400 hover:text-yellow-400 transition-colors flex items-center group"
+                      className="text-gray-400 hover:text-yellow-400 transition-colors flex items-center "
                     >
                       <ChevronRight
                         size={14}

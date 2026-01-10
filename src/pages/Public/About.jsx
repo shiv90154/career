@@ -202,14 +202,14 @@ const About = () => {
             <div className="relative">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 <img 
-                  src="/about-hero.jpg" 
+                  src="public\Images\about1.png" 
                   alt="Career Path Institute Campus" 
-                  className="w-full h-96 object-cover"
+                  className="w-full h-96 object-cover object-fill"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent"></div>
                 
                 {/* Floating Card */}
-                <div className="absolute bottom-6 left-6 right-6 bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <div className="absolute bottom-6 left-6 right-6 bg-black/10 backdrop-blur-sm rounded-xl p-1 border border-white/20">
                   <div className="flex items-center space-x-4">
                     <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center">
                       <ShieldCheck size={32} className="text-white" />
@@ -305,17 +305,17 @@ const About = () => {
             <div className="relative">
               <div className="rounded-2xl overflow-hidden shadow-2xl">
                 <img 
-                  src="/story-image.jpg" 
+                  src="public\Images\about2.jpg" 
                   alt="Our Institute Campus" 
-                  className="w-full h-96 object-cover"
+                  className="w-full h-96 object-cover object-fill"
                 />
               </div>
               
               {/* Floating Experience Badge */}
-              <div className="absolute -bottom-6 -right-6 bg-gradient-to-br from-yellow-500 to-yellow-600 text-gray-900 p-8 rounded-2xl shadow-2xl">
+              <div className="absolute -top-6 -right-11 bg-black/10 backdrop-blur-sm text-white p-2 rounded-2xl shadow-2xl">
                 <div className="text-center">
                   <div className="text-4xl font-bold">13+</div>
-                  <div className="text-sm font-semibold uppercase">Years of Excellence</div>
+                  <div className="text-sm font-semibold uppercase">Years of Exp.</div>
                 </div>
               </div>
             </div>

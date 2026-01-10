@@ -20,16 +20,66 @@ import {
   ChevronRight,
 } from "lucide-react";
 
+
 const Home = () => {
   const [featuredCourses, setFeaturedCourses] = useState([]);
   const [stats, setStats] = useState(null);
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  // Hero slider images
+  const heroSlides = [
+    {
+      id: 1,
+      image: "/Images/home.png",
+      alt: "Students at Career Path Institute"
+    },
+    {
+      id: 2,
+      image: "public/Images/about2.jpg",
+      alt: "Classroom learning environment"
+  
+    },
+    {
+      id: 3,
+      image: "public/Images/slider3.jpg",
+      alt: "Study group discussion"
+    },
+    {
+      id: 4,
+      image: "public/Images/slider-4.png",
+      alt: "Online learning platform"
+    },
+    {
+      id: 5,
+      image: "public/Images/slider5.png",
+      alt: "Online learning platform"
+    },
+    {
+      id: 6,
+      image: "public/Images/slider6.png",
+      alt: "Online learning platform"
+    }
+  ];
 
   useEffect(() => {
     fetchHomeData();
-  }, []);
+    
+    // Auto slide functionality
+    let slideInterval;
+    if (isAutoPlaying) {
+      slideInterval = setInterval(() => {
+        nextSlide();
+      }, 5000);
+    }
+    
+    return () => {
+      if (slideInterval) clearInterval(slideInterval);
+    };
+  }, [isAutoPlaying, currentSlide]);
 
   const fetchHomeData = async () => {
     try {
@@ -47,6 +97,20 @@ const Home = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev === heroSlides.length - 1 ? 0 : prev + 1));
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
+  };
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+    setIsAutoPlaying(false);
+    setTimeout(() => setIsAutoPlaying(true), 3000);
   };
 
   const nextTestimonial = () => {
@@ -166,7 +230,7 @@ const Home = () => {
                 {achievements.slice(0, 3).map((achievement, index) => (
                   <div
                     key={index}
-                    className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10"
+                    className="bg-white/5 backdrop-blur-sm rounded-xl p-2 border border-white/10"
                   >
                     <div className="flex items-center space-x-3">
                       <div className="p-2 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg">
@@ -189,7 +253,7 @@ const Home = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   to="/courses"
-                  className="inline-flex items-center justify-center space-x-2 px-8 py-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 font-bold rounded-xl hover:from-yellow-600 hover:to-yellow-700 transform hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-2xl"
+                  className="inline-flex items-center justify-center space-x-2 px-8 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 font-bold rounded-xl hover:from-yellow-600 hover:to-yellow-700 transform hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-2xl"
                 >
                   <span>Explore Courses</span>
                   <ArrowRight size={20} />
@@ -220,33 +284,89 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Hero Image */}
-            <div className="relative">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <img
-                  src="/hero-image.jpg"
-                  alt="Students at Career Path Institute"
-                  className="w-full h-96 object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent"></div>
+            {/* Hero Image Slider */}
+            <div className="relative mb-60">
+              <div className="relative rounded overflow-hidden shadow-2xl">
+                {/* Slider Container */}
+                <div className="relative h-64 sm:h-80 md:h-96 lg:h-400px] w-full ">
+                  {heroSlides.map((slide, index) => (
+                    <div
+                      key={slide.id}
+                      className={`absolute inset-0 transition-opacity duration-1000  ${
+                        index === currentSlide
+                          ? "opacity-100 z-10"
+                          : "opacity-0 z-0"
+                      }`}
+                    >
+                      <img
+                        src={slide.image}
+                        alt={slide.alt}
+                        className="w-full h-full object-fill object-contain"
+                        loading="lazy"
+                      />
+                    </div>
+                  ))}
+                  
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent z-20"></div>
+
+                  {/* Navigation Arrows */}
+                  <button
+                    onClick={prevSlide}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 z-30 p-2 bg-black/30 hover:bg-black/50 backdrop-blur-sm rounded-full transition-all duration-300 group"
+                    aria-label="Previous slide"
+                  >
+                    <ChevronLeft 
+                      size={24} 
+                      className="text-white group-hover:scale-110 transition-transform" 
+                    />
+                  </button>
+                  
+                  <button
+                    onClick={nextSlide}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 z-30 p-2 bg-black/30 hover:bg-black/50 backdrop-blur-sm rounded-full transition-all duration-300 group"
+                    aria-label="Next slide"
+                  >
+                    <ChevronRight 
+                      size={24} 
+                      className="text-white group-hover:scale-110 transition-transform" 
+                    />
+                  </button>
+
+                  {/* Slide Indicators */}
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-30 flex space-x-2">
+                    {heroSlides.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => goToSlide(index)}
+                        className={`w-2 h-2 rounded-full transition-all duration-100 ${
+                          index === currentSlide
+                            ? "w-8 bg-yellow-500"
+                            : "bg-white/60 hover:bg-white"
+                        }`}
+                        aria-label={`Go to slide ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                </div>
 
                 {/* Floating Stats Card */}
-                <div className="absolute bottom-6 left-6 right-6 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                  <div className="flex items-center justify-between">
+                <div className="mt-7 bottom-6 left-6 right-6 bg-white/8 backdrop-blur-sm rounded-xl p-2  border-white/20 z-30 ">
+                  <div className="flex items-center justify-center gap-10">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-white">94%</div>
+                      <div className="text-xl font-bold text-white">94%</div>
                       <div className="text-sm text-gray-300">
                         Selection Rate
                       </div>
                     </div>
                     <div className="h-8 w-px bg-white/30"></div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-white">24/7</div>
+                      <div className="text-xl font-bold text-white">24/7</div>
                       <div className="text-sm text-gray-300">Doubt Support</div>
                     </div>
                     <div className="h-8 w-px bg-white/30"></div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-white">1000+</div>
+                      <div className="text-xl font-bold text-white">1000+</div>
                       <div className="text-sm text-gray-300">Mock Tests</div>
                     </div>
                   </div>
@@ -275,6 +395,7 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Rest of your existing code remains the same */}
       {/* Stats Bar */}
       <section className="bg-gradient-to-r from-gray-900 to-gray-800 py-12 -mt-1">
         <div className="container mx-auto px-4 lg:px-8">
@@ -294,7 +415,7 @@ const Home = () => {
       </section>
 
       {/* Featured Courses */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-300">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="text-center mb-12">
             <span className="inline-block px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-sm font-semibold mb-4">
@@ -433,7 +554,7 @@ const Home = () => {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-20 bg-gradient-to-b from-white to-gray-50">
+      <section className="py-20 bg-gray-300 to-gray-50">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="text-center mb-16">
             <span className="inline-block px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold mb-4">
