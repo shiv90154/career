@@ -42,7 +42,7 @@ const Courses = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await api.get('/public/courses');
+      const response = await api.get('/public/courses.php');
       setCourses(response.data);
       setFilteredCourses(response.data);
     } catch (error) {
@@ -54,7 +54,7 @@ const Courses = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await api.get('/public/categories');
+      const response = await api.get('/public/categories.php');
       setCategories(response.data);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -63,7 +63,7 @@ const Courses = () => {
 
   const fetchPopularTags = async () => {
     try {
-      const response = await api.get('/public/tags');
+      const response = await api.get('/public/tags.php');
       setPopularTags(response.data.slice(0, 10));
     } catch (error) {
       console.error('Error fetching tags:', error);

@@ -83,11 +83,12 @@ const Home = () => {
 
   const fetchHomeData = async () => {
     try {
-      const [coursesRes, statsRes, testimonialsRes] = await Promise.all([
-        api.get("/public/courses?featured=true&limit=6"),
-        api.get("/public/stats"),
-        api.get("/public/testimonials"),
-      ]);
+ const [coursesRes, statsRes, testimonialsRes] = await Promise.all([
+  api.get("/public/courses.php?featured=true&limit=6"),
+  api.get("/public/stats.php"),
+  api.get("/public/testimonials.php"),
+]);
+
 
       setFeaturedCourses(coursesRes.data);
       setStats(statsRes.data);

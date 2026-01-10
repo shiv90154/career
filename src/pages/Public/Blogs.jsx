@@ -63,8 +63,8 @@ const Blogs = () => {
   const fetchBlogs = async () => {
     try {
       const [blogsRes, categoriesRes] = await Promise.all([
-        api.get("/public/blogs"),
-        api.get("/public/blog-categories"),
+        api.get("/public/blogs.php"),
+        api.get("/public/blog-categories.php"),
       ]);
 
       setBlogs(blogsRes.data);

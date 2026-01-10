@@ -38,7 +38,7 @@ const TestForm = React.lazy(() =>
 // const TestQuestions = lazy(() => import('./pages/Admin/TestQuestions'));
 const ManageStudents = lazy(() => import("./pages/Admin/ManageStudents"));
 // const ManageEnrollments = lazy(() => import('./pages/Admin/ManageEnrollments'));
-// const ManagePayments = lazy(() => import('./pages/Admin/ManagePayments'));
+const ManagePayments = lazy(() => import('./pages/Admin/ManagePayments'));
 const ManageBlogs = lazy(() => import('./pages/Admin/ManageBlogs'));
 // const BlogForm = lazy(() => import('./pages/Admin/BlogForm'));
 const ManageLiveClasses = lazy(() => import('./pages/Admin/ManageLiveClasses'));
@@ -371,14 +371,14 @@ const App = () => {
                 </AdminLayout>
               </ProtectedRoute>
             } /> */}
-            {/* 
+           
             <Route path="/admin/payments" element={
-              <ProtectedRoute requiredRole="admin">
+              // <ProtectedRoute requiredRole="admin">
                 <AdminLayout>
                   <ManagePayments />
                 </AdminLayout>
-              </ProtectedRoute>
-            } /> */}
+              
+            } /> 
 
             <Route path="/admin/blogs" element={
               // <ProtectedRoute requiredRole="admin">
