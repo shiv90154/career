@@ -172,24 +172,29 @@ const Layout = ({ children, admin = false, student = false }) => {
     },
   ];
 
+  // Header background based on user type
+  const getHeaderBg = () => {
+    if (admin) return "bg-gradient-to-r from-gray-900 to-gray-800";
+    if (student) return "bg-gradient-to-r from-blue-900 to-blue-700";
+    return "bg-gradient-to-r from-blue-900 to-blue-800";
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
-
-      <header className="bg-gray-200 shadow-lg sticky top-0 z-50 p-4">
+      <header className={`${getHeaderBg()} shadow-lg sticky top-0 z-50`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center">
               <Link to="/" className="flex items-center space-x-3 group">
-                <div className=" flex items-center justify-center ">
+                <div className="flex items-center justify-center">
                   <img
-                    src="public/Images/logo-notgood.png"
+                    src="/Images/logo-notgood.png"
                     alt="Career Path Institute"
-                    className="w-50 h-21 "
+                    className="h-12 w-auto"
                   />
                 </div>
-               
               </Link>
             </div>
 
@@ -200,10 +205,10 @@ const Layout = ({ children, admin = false, student = false }) => {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`px-4 py-2 rounded-lg text-[15px] font-medium  duration-200 ${
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                       location.pathname === item.path
-                        ? "bg-white/3 text-black-200"
-                        : "text-blue-900 hover:bg-black/9 hover:text-black"
+                        ? "bg-white/20 text-white shadow-md"
+                        : "text-white/90 hover:bg-white/10 hover:text-white"
                     }`}
                   >
                     {item.label}
@@ -220,10 +225,10 @@ const Layout = ({ children, admin = false, student = false }) => {
                   <div className="relative" ref={notificationsRef}>
                     <button
                       onClick={() => setNotificationsOpen(!notificationsOpen)}
-                      className="relative p-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                      className="relative p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                     >
                       <Bell size={20} />
-                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-600 text-white text-xs rounded-full flex items-center justify-center">
+                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse">
                         3
                       </span>
                     </button>
@@ -270,7 +275,7 @@ const Layout = ({ children, admin = false, student = false }) => {
                                   </div>
                                 </div>
                                 {notification.unread && (
-                                  <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
                                 )}
                               </div>
                             </div>
@@ -294,9 +299,9 @@ const Layout = ({ children, admin = false, student = false }) => {
                   <div className="relative" ref={userDropdownRef}>
                     <button
                       onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                      className="flex items-center space-x-3 p-2 rounded-lg hover:bg-white/5 transition-colors"
+                      className="flex items-center space-x-3 p-2 rounded-lg hover:bg-white/10 transition-colors"
                     >
-                      <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                      <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-md">
                         {user.profile_image ? (
                           <img
                             src={user.profile_image}
@@ -311,23 +316,23 @@ const Layout = ({ children, admin = false, student = false }) => {
                         <p className="text-sm font-medium text-white">
                           {user.full_name}
                         </p>
-                        <p className="text-xs text-gray-300 capitalize">
+                        <p className="text-xs text-white/80 capitalize">
                           {user.role}
                         </p>
                       </div>
                       <ChevronDown
                         size={16}
-                        className={`text-gray-400 transition-transform duration-200 ${
+                        className={`text-white/80 transition-transform duration-200 ${
                           userDropdownOpen ? "rotate-180" : ""
                         }`}
                       />
                     </button>
 
                     {userDropdownOpen && (
-                      <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50">
+                      <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50 animate-slideDown">
                         <div className="p-4 border-b border-gray-100">
                           <div className="flex items-center space-x-3">
-                            <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-white font-semibold">
+                            <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-white font-semibold shadow-md">
                               {user.full_name?.charAt(0) || "U"}
                             </div>
                             <div className="flex-1 min-w-0">
@@ -337,7 +342,7 @@ const Layout = ({ children, admin = false, student = false }) => {
                               <p className="text-sm text-gray-500 truncate">
                                 {user.email}
                               </p>
-                              <span className="inline-block mt-1 px-2 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full capitalize">
+                              <span className="inline-block mt-1 px-2 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full capitalize shadow-sm">
                                 {user.role}
                               </span>
                             </div>
@@ -350,14 +355,14 @@ const Layout = ({ children, admin = false, student = false }) => {
                                 to="/admin/dashboard"
                                 className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
                               >
-                                <Home size={18} className="text-gray-400" />
+                                <Home size={18} className="text-gray-500" />
                                 <span>Dashboard</span>
                               </Link>
                               <Link
                                 to="/admin/settings"
                                 className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
                               >
-                                <Settings size={18} className="text-gray-400" />
+                                <Settings size={18} className="text-gray-500" />
                                 <span>Settings</span>
                               </Link>
                             </>
@@ -367,14 +372,14 @@ const Layout = ({ children, admin = false, student = false }) => {
                                 to="/student/dashboard"
                                 className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
                               >
-                                <Home size={18} className="text-gray-400" />
+                                <Home size={18} className="text-gray-500" />
                                 <span>Dashboard</span>
                               </Link>
                               <Link
                                 to="/student/profile"
                                 className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
                               >
-                                <User size={18} className="text-gray-400" />
+                                <User size={18} className="text-gray-500" />
                                 <span>Profile</span>
                               </Link>
                             </>
@@ -395,13 +400,13 @@ const Layout = ({ children, admin = false, student = false }) => {
                 <div className="flex items-center space-x-3">
                   <Link
                     to="/login"
-                    className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-blue-800 to-blue-900 text-white  hover:from-blue-700 hover:to-blue-900 rounded-lg transition-colors"
+                    className="px-4 py-2 text-sm font-medium bg-white text-blue-900 hover:bg-blue-50 rounded-lg transition-colors shadow-md hover:shadow-lg"
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 rounded-lg hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                    className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 rounded-lg hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105"
                   >
                     Register
                   </Link>
@@ -412,7 +417,7 @@ const Layout = ({ children, admin = false, student = false }) => {
               {(admin || student) && (
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="md:hidden p-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                  className="md:hidden p-2 text-white hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                 >
                   {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
@@ -436,8 +441,8 @@ const Layout = ({ children, admin = false, student = false }) => {
                     to={item.path}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                       location.pathname === item.path
-                        ? "bg-white/10 text-white"
-                        : "text-gray-300 hover:bg-white/5 hover:text-white"
+                        ? "bg-white/20 text-white"
+                        : "text-white/90 hover:bg-white/10 hover:text-white"
                     }`}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -457,31 +462,31 @@ const Layout = ({ children, admin = false, student = false }) => {
           <>
             {/* Desktop Sidebar */}
             <aside className="hidden md:flex flex-col w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white shadow-xl">
-              <div className="p-6 border-b border-gray-700">
+              <div className="p-6 border-b border-gray-700 bg-gradient-to-r from-gray-800 to-gray-900">
                 <h2 className="text-xl font-bold text-white">
                   {admin ? "Admin Panel" : "Student Portal"}
                 </h2>
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-sm text-gray-300 mt-1">
                   {admin ? "Management Dashboard" : "Learning Dashboard"}
                 </p>
               </div>
 
-              <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+              <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
                 {navItems.map((item) => (
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                    className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                       location.pathname.startsWith(item.path)
-                        ? "bg-gradient-to-r from-yellow-500/20 to-yellow-600/10 text-yellow-400 border-l-4 border-yellow-500"
-                        : "text-gray-300 hover:bg-white/5 hover:text-white"
+                        ? "bg-gradient-to-r from-yellow-500/20 to-yellow-600/10 text-yellow-400 border-l-4 border-yellow-500 shadow-md"
+                        : "text-gray-300 hover:bg-white/5 hover:text-white hover:shadow-md"
                     }`}
                   >
                     <div
-                      className={`${
+                      className={`transition-colors ${
                         location.pathname.startsWith(item.path)
                           ? "text-yellow-400"
-                          : "text-gray-400"
+                          : "text-gray-400 group-hover:text-white"
                       }`}
                     >
                       {item.icon}
@@ -490,7 +495,7 @@ const Layout = ({ children, admin = false, student = false }) => {
                     {location.pathname.startsWith(item.path) && (
                       <ChevronRight
                         size={16}
-                        className="ml-auto text-yellow-400"
+                        className="ml-auto text-yellow-400 animate-pulse"
                       />
                     )}
                   </Link>
@@ -499,20 +504,20 @@ const Layout = ({ children, admin = false, student = false }) => {
                 <div className="pt-6 mt-6 border-t border-gray-700">
                   <button
                     onClick={handleLogout}
-                    className="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-red-500/10 hover:text-red-400 transition-colors w-full"
+                    className="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-red-500/10 hover:text-red-400 transition-colors w-full group"
                   >
-                    <LogOut size={20} />
+                    <LogOut size={20} className="group-hover:animate-pulse" />
                     <span className="font-medium">Logout</span>
                   </button>
                 </div>
               </nav>
 
-              <div className="p-4 border-t border-gray-700">
-                <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-4">
+              <div className="p-4 border-t border-gray-700 bg-gradient-to-r from-gray-800 to-gray-900">
+                <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-4 border border-gray-700">
                   <h4 className="font-bold text-white">
                     Career Path Institute
                   </h4>
-                  <p className="text-sm text-gray-400 mt-1">
+                  <p className="text-sm text-gray-300 mt-1">
                     Shimla, Himachal Pradesh
                   </p>
                   <div className="mt-3 flex items-center space-x-2 text-xs text-gray-400">
@@ -534,11 +539,16 @@ const Layout = ({ children, admin = false, student = false }) => {
                 onClick={() => setMobileMenuOpen(false)}
               />
               <div className="absolute inset-y-0 left-0 w-64 bg-gradient-to-b from-gray-900 to-gray-800 shadow-xl overflow-y-auto">
-                <div className="p-6 border-b border-gray-700">
+                <div className="p-6 border-b border-gray-700 bg-gradient-to-r from-gray-800 to-gray-900">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-white">
-                      {admin ? "Admin Panel" : "Student Portal"}
-                    </h2>
+                    <div>
+                      <h2 className="text-xl font-bold text-white">
+                        {admin ? "Admin Panel" : "Student Portal"}
+                      </h2>
+                      <p className="text-sm text-gray-300">
+                        Welcome, {user?.full_name}
+                      </p>
+                    </div>
                     <button
                       onClick={() => setMobileMenuOpen(false)}
                       className="p-2 text-gray-400 hover:text-white"
@@ -548,7 +558,7 @@ const Layout = ({ children, admin = false, student = false }) => {
                   </div>
                 </div>
 
-                <nav className="p-4 space-y-1">
+                <nav className="p-4 space-y-2">
                   {navItems.map((item) => (
                     <Link
                       key={item.path}
@@ -560,7 +570,9 @@ const Layout = ({ children, admin = false, student = false }) => {
                       }`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      {item.icon}
+                      <div className={location.pathname.startsWith(item.path) ? "text-yellow-400" : "text-gray-400"}>
+                        {item.icon}
+                      </div>
                       <span className="font-medium">{item.label}</span>
                     </Link>
                   ))}
@@ -577,11 +589,11 @@ const Layout = ({ children, admin = false, student = false }) => {
                 </nav>
 
                 <div className="p-4">
-                  <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-4">
+                  <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-4 border border-gray-700">
                     <h4 className="font-bold text-white">
                       Career Path Institute
                     </h4>
-                    <p className="text-sm text-gray-400 mt-1">
+                    <p className="text-sm text-gray-300 mt-1">
                       Shimla, Himachal Pradesh
                     </p>
                   </div>
@@ -593,12 +605,14 @@ const Layout = ({ children, admin = false, student = false }) => {
 
         {/* Main Content */}
         <main className={`flex-1 ${admin || student ? "md:ml-0" : ""}`}>
-          <div className="min-h-[calc(100vh-140px)]">{children}</div>
+          <div className="min-h-[calc(100vh-140px)] bg-gradient-to-br from-gray-50 to-white">
+            {children}
+          </div>
         </main>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-gradient-to-br from-gray-900 to-gray-800 text-white mt-16">
+
+       <footer className="bg-gradient-to-br from-gray-900 to-gray-800 text-white mt-16">
         <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Company Info */}
@@ -815,6 +829,7 @@ const Layout = ({ children, admin = false, student = false }) => {
           </div>
         </div>
       </footer>
+    
     </div>
   );
 };
