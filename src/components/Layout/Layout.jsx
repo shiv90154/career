@@ -412,7 +412,7 @@ const Layout = ({ children, admin = false, student = false }) => {
               {(admin || student) && (
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="md:hidden p-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                  className="md:hidden p-2   text-blue-900 hover:bg-black/9 hover:text-black"
                 >
                   {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
@@ -461,7 +461,7 @@ const Layout = ({ children, admin = false, student = false }) => {
                 <h2 className="text-xl font-bold text-white">
                   {admin ? "Admin Panel" : "Student Portal"}
                 </h2>
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-sm text-gray-400 mt-1 ">
                   {admin ? "Management Dashboard" : "Learning Dashboard"}
                 </p>
               </div>

@@ -1,8 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { api } from '../../services/api';
-import { Save, Upload, X } from 'lucide-react';
-import LoadingSpinner from '../../components/Common/LoadingSpinner';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Save, Upload, X } from "lucide-react";
+import LoadingSpinner from "../../components/Common/LoadingSpinner";
+import api from "../../services/api";
+import {
+  ArrowLeft,
+  BookOpen,
+  Tag,
+  DollarSign,
+  Clock,
+  BarChart3,
+  TrendingUp,
+  Info,
+} from "lucide-react";
 
 const CourseForm = () => {
   const { id } = useParams();
@@ -12,27 +22,27 @@ const CourseForm = () => {
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
   const [thumbnail, setThumbnail] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState('');
+  const [previewUrl, setPreviewUrl] = useState("");
   const [instructors, setInstructors] = useState([]);
   const [formErrors, setFormErrors] = useState({});
-  
+
   const [formData, setFormData] = useState({
-    course_code: '',
-    title: '',
-    slug: '',
-    description: '',
-    short_description: '',
+    course_code: "",
+    title: "",
+    slug: "",
+    description: "",
+    short_description: "",
     price: 0,
-    discount_price: '',
+    discount_price: "",
     duration_days: 30,
     total_hours: 40,
-    level: 'beginner',
+    level: "beginner",
     is_featured: false,
     is_active: true,
-    instructor_id: '',
-    category: '',
-    prerequisites: '',
-    what_you_will_learn: ''
+    instructor_id: "",
+    category: "",
+    prerequisites: "",
+    what_you_will_learn: "",
   });
 
   useEffect(() => {
@@ -44,15 +54,33 @@ const CourseForm = () => {
 
   const fetchCourse = async () => {
     try {
-      const response = await api.get(`/admin/courses/${id}`);
-      const course = response.data;
-      setFormData(course);
-      if (course.thumbnail) {
-        setPreviewUrl(`${process.env.REACT_APP_API_URL}/uploads/${course.thumbnail}`);
+      // 获取所有课程，然后筛选出当前id的课程
+      const response = await api.get("/admin/courses");
+      const courses = response.data.data;
+      const course = courses.find((c) => c.id == id);
+
+      if (course) {
+        // 转换数据格式
+        const formattedData = {
+          ...course,
+          is_featured: Boolean(course.is_featured),
+          is_active: Boolean(course.is_active),
+        };
+        setFormData(formattedData);
+
+        // 如果有缩略图
+        if (course.thumbnail) {
+          setPreviewUrl(
+            `${import.meta.env.VITE_API_URL}/uploads/${course.thumbnail}`
+          );
+        }
+      } else {
+        throw new Error("Course not found");
       }
     } catch (error) {
-      console.error('Error fetching course:', error);
-      navigate('/admin/courses');
+      console.error("Error fetching course:", error);
+      alert("Error loading course data");
+      navigate("/admin/courses");
     } finally {
       setLoading(false);
     }
@@ -60,56 +88,62 @@ const CourseForm = () => {
 
   const fetchInstructors = async () => {
     try {
-      const response = await api.get('/admin/instructors');
-      setInstructors(response.data);
+      // 假设有一个获取讲师的API
+      // 如果没有，可以暂时注释掉
+      // const response = await api.get('/admin/instructors');
+      // setInstructors(response.data);
     } catch (error) {
-      console.error('Error fetching instructors:', error);
+      console.error("Error fetching instructors:", error);
     }
   };
 
   const validateForm = () => {
     const errors = {};
-    
+
     if (!formData.course_code.trim()) {
-      errors.course_code = 'Course code is required';
+      errors.course_code = "Course code is required";
     }
-    
+
     if (!formData.title.trim()) {
-      errors.title = 'Title is required';
+      errors.title = "Title is required";
     }
-    
+
     if (!formData.slug.trim()) {
-      errors.slug = 'Slug is required';
+      errors.slug = "Slug is required";
     } else if (!/^[a-z0-9-]+$/.test(formData.slug)) {
-      errors.slug = 'Slug can only contain lowercase letters, numbers, and hyphens';
+      errors.slug =
+        "Slug can only contain lowercase letters, numbers, and hyphens";
     }
-    
+
     if (formData.price < 0) {
-      errors.price = 'Price cannot be negative';
+      errors.price = "Price cannot be negative";
     }
-    
-    if (formData.discount_price && parseFloat(formData.discount_price) > parseFloat(formData.price)) {
-      errors.discount_price = 'Discount price cannot be greater than regular price';
+
+    if (
+      formData.discount_price &&
+      parseFloat(formData.discount_price) > parseFloat(formData.price)
+    ) {
+      errors.discount_price =
+        "Discount price cannot be greater than regular price";
     }
-    
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const newValue = type === 'checkbox' ? checked : value;
-    
-    setFormData(prev => ({
+    const newValue = type === "checkbox" ? checked : value;
+
+    setFormData((prev) => ({
       ...prev,
-      [name]: newValue
+      [name]: newValue,
     }));
 
-    // Clear error when user starts typing
     if (formErrors[name]) {
-      setFormErrors(prev => ({
+      setFormErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
@@ -117,56 +151,83 @@ const CourseForm = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file type
-      const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      const validTypes = ["image/jpeg", "image/png", "image/webp"];
       if (!validTypes.includes(file.type)) {
-        setFormErrors(prev => ({
+        setFormErrors((prev) => ({
           ...prev,
-          thumbnail: 'Please upload a JPG, PNG, or WebP image'
+          thumbnail: "Please upload a JPG, PNG, or WebP image",
         }));
         return;
       }
 
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        setFormErrors(prev => ({
+        setFormErrors((prev) => ({
           ...prev,
-          thumbnail: 'Image size should be less than 5MB'
+          thumbnail: "Image size should be less than 5MB",
         }));
         return;
       }
 
       setThumbnail(file);
       setPreviewUrl(URL.createObjectURL(file));
-      setFormErrors(prev => ({ ...prev, thumbnail: '' }));
+      setFormErrors((prev) => ({ ...prev, thumbnail: "" }));
     }
   };
 
   const removeThumbnail = () => {
     setThumbnail(null);
-    setPreviewUrl('');
-    setFormData(prev => ({ ...prev, thumbnail: '' }));
+    setPreviewUrl("");
   };
 
   const generateSlug = (title) => {
     return title
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
   };
 
   const handleTitleChange = (e) => {
     const title = e.target.value;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       title,
-      slug: generateSlug(title)
+      slug: generateSlug(title),
     }));
+  };
+
+  const prepareCourseData = () => {
+    // 准备要发送的数据，确保格式符合后端要求
+    const data = {
+      id: formData.id,
+      course_code: formData.course_code || "",
+      title: formData.title || "",
+      slug: formData.slug || "",
+      description: formData.description || "",
+      short_description: formData.short_description || "",
+      price: parseFloat(formData.price) || 0,
+      discount_price: formData.discount_price
+        ? parseFloat(formData.discount_price)
+        : null,
+      duration_days: parseInt(formData.duration_days) || 30,
+      total_hours: parseInt(formData.total_hours) || 40,
+      level: formData.level || "beginner",
+      is_featured: formData.is_featured ? 1 : 0,
+      is_active: formData.is_active ? 1 : 1,
+    };
+
+    // 添加可选字段（如果存在）
+    if (formData.instructor_id) data.instructor_id = formData.instructor_id;
+    if (formData.category) data.category = formData.category;
+    if (formData.prerequisites) data.prerequisites = formData.prerequisites;
+    if (formData.what_you_will_learn)
+      data.what_you_will_learn = formData.what_you_will_learn;
+
+    return data;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -174,34 +235,37 @@ const CourseForm = () => {
     setSaving(true);
 
     try {
-      const formDataToSend = new FormData();
-      
-      // Append form data
-      Object.keys(formData).forEach(key => {
-        if (formData[key] !== null && formData[key] !== undefined && formData[key] !== '') {
-          formDataToSend.append(key, formData[key]);
-        }
-      });
-
-      // Append thumbnail if new
-      if (thumbnail) {
-        formDataToSend.append('thumbnail_file', thumbnail);
-      }
+      const courseData = prepareCourseData();
 
       if (isEdit) {
-        await api.put(`/admin/courses/${id}`, formDataToSend, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        // 使用PUT方法更新课程
+        await api.put("/admin/courses/update.php", courseData);
       } else {
-        await api.post('/admin/courses', formDataToSend, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        // 使用POST方法创建新课程
+        await api.post("/admin/courses/create.php", courseData);
       }
 
-      navigate('/admin/courses');
+      // 如果有缩略图，单独上传
+      if (thumbnail) {
+        const thumbnailFormData = new FormData();
+        thumbnailFormData.append("thumbnail", thumbnail);
+        thumbnailFormData.append("course_id", isEdit ? id : "new");
+
+        // 假设有一个上传缩略图的API
+        await api.post(
+          "/admin/courses/upload-thumbnail.php",
+          thumbnailFormData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+      }
+
+      navigate("/admin/courses");
     } catch (error) {
-      console.error('Error saving course:', error);
-      const errorMessage = error.response?.data?.message || 'Error saving course';
+      console.error("Error saving course:", error);
+      const errorMessage =
+        error.response?.data?.message || "Error saving course";
       alert(errorMessage);
     } finally {
       setSaving(false);
@@ -216,39 +280,43 @@ const CourseForm = () => {
     );
   }
 
+  // 返回JSX部分保持不变...
+  // 保持原有的JSX代码...
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <button
-            onClick={() => navigate('/admin/courses')}
+            onClick={() => navigate("/admin/courses.php")}
             className="inline-flex items-center text-gray-600 hover:text-blue-600 mb-4 transition-colors duration-200"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
             Back to Courses
           </button>
-          
+
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                {isEdit ? 'Edit Course' : 'Create New Course'}
+                {isEdit ? "Edit Course" : "Create New Course"}
               </h1>
               <p className="text-gray-600 mt-2">
-                {isEdit 
-                  ? 'Update course details and content'
-                  : 'Fill in the details to create a new course'
-                }
+                {isEdit
+                  ? "Update course details and content"
+                  : "Fill in the details to create a new course"}
               </p>
             </div>
-            
+
             <div className="flex items-center space-x-2">
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                isEdit 
-                  ? 'bg-yellow-100 text-yellow-800' 
-                  : 'bg-green-100 text-green-800'
-              }`}>
-                {isEdit ? 'Edit Mode' : 'New Course'}
+              <span
+                className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  isEdit
+                    ? "bg-yellow-100 text-yellow-800"
+                    : "bg-green-100 text-green-800"
+                }`}
+              >
+                {isEdit ? "Edit Mode" : "New Course"}
               </span>
             </div>
           </div>
@@ -264,9 +332,11 @@ const CourseForm = () => {
                   <div className="p-2 bg-blue-100 rounded-lg mr-3">
                     <BookOpen className="w-5 h-5 text-blue-600" />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-800">Basic Information</h2>
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    Basic Information
+                  </h2>
                 </div>
-                
+
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -283,17 +353,21 @@ const CourseForm = () => {
                           value={formData.course_code}
                           onChange={handleInputChange}
                           className={`pl-10 w-full rounded-lg border ${
-                            formErrors.course_code 
-                              ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                              : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                            formErrors.course_code
+                              ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                              : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                           } focus:ring-2 focus:ring-opacity-50 px-4 py-3 transition-colors duration-200`}
                           placeholder="CP-PATWARI-2024"
                         />
                       </div>
                       {formErrors.course_code && (
-                        <p className="mt-1 text-sm text-red-600">{formErrors.course_code}</p>
+                        <p className="mt-1 text-sm text-red-600">
+                          {formErrors.course_code}
+                        </p>
                       )}
-                      <p className="mt-1 text-sm text-gray-500">Unique identifier for the course</p>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Unique identifier for the course
+                      </p>
                     </div>
 
                     <div>
@@ -343,18 +417,22 @@ const CourseForm = () => {
                         value={formData.slug}
                         onChange={handleInputChange}
                         className={`flex-1 rounded-r-lg border ${
-                          formErrors.slug 
-                            ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                          formErrors.slug
+                            ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                            : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                         } focus:ring-2 focus:ring-opacity-50 px-4 py-3 transition-colors duration-200`}
                         placeholder="patwari-complete-preparation"
                         required
                       />
                     </div>
                     {formErrors.slug && (
-                      <p className="mt-1 text-sm text-red-600">{formErrors.slug}</p>
+                      <p className="mt-1 text-sm text-red-600">
+                        {formErrors.slug}
+                      </p>
                     )}
-                    <p className="mt-1 text-sm text-gray-500">Used in course URL</p>
+                    <p className="mt-1 text-sm text-gray-500">
+                      Used in course URL
+                    </p>
                   </div>
 
                   <div>
@@ -372,12 +450,16 @@ const CourseForm = () => {
                       required
                     />
                     <div className="flex justify-between mt-1">
-                      <p className="text-sm text-gray-500">Appears on course cards and previews</p>
-                      <span className={`text-sm ${
-                        formData.short_description.length >= 450 
-                          ? 'text-red-600' 
-                          : 'text-gray-500'
-                      }`}>
+                      <p className="text-sm text-gray-500">
+                        Appears on course cards and previews
+                      </p>
+                      <span
+                        className={`text-sm ${
+                          formData.short_description.length >= 450
+                            ? "text-red-600"
+                            : "text-gray-500"
+                        }`}
+                      >
                         {formData.short_description.length}/500
                       </span>
                     </div>
@@ -410,7 +492,9 @@ const CourseForm = () => {
                       className="w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-4 py-3 transition-colors duration-200"
                       placeholder="Enter each learning outcome on a new line"
                     />
-                    <p className="mt-1 text-sm text-gray-500">One learning outcome per line</p>
+                    <p className="mt-1 text-sm text-gray-500">
+                      One learning outcome per line
+                    </p>
                   </div>
                 </div>
               </div>
@@ -421,9 +505,11 @@ const CourseForm = () => {
                   <div className="p-2 bg-green-100 rounded-lg mr-3">
                     <DollarSign className="w-5 h-5 text-green-600" />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-800">Pricing & Duration</h2>
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    Pricing & Duration
+                  </h2>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -441,15 +527,17 @@ const CourseForm = () => {
                         min="0"
                         step="0.01"
                         className={`pl-10 w-full rounded-lg border ${
-                          formErrors.price 
-                            ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                          formErrors.price
+                            ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                            : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                         } focus:ring-2 focus:ring-opacity-50 px-4 py-3 transition-colors duration-200`}
                         required
                       />
                     </div>
                     {formErrors.price && (
-                      <p className="mt-1 text-sm text-red-600">{formErrors.price}</p>
+                      <p className="mt-1 text-sm text-red-600">
+                        {formErrors.price}
+                      </p>
                     )}
                   </div>
 
@@ -469,18 +557,25 @@ const CourseForm = () => {
                         min="0"
                         step="0.01"
                         className={`pl-10 w-full rounded-lg border ${
-                          formErrors.discount_price 
-                            ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                          formErrors.discount_price
+                            ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                            : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                         } focus:ring-2 focus:ring-opacity-50 px-4 py-3 transition-colors duration-200`}
                       />
                     </div>
                     {formErrors.discount_price && (
-                      <p className="mt-1 text-sm text-red-600">{formErrors.discount_price}</p>
+                      <p className="mt-1 text-sm text-red-600">
+                        {formErrors.discount_price}
+                      </p>
                     )}
                     {formData.discount_price && (
                       <p className="mt-2 text-sm text-green-600">
-                        Discount: {((1 - formData.discount_price / formData.price) * 100).toFixed(0)}% off
+                        Discount:{" "}
+                        {(
+                          (1 - formData.discount_price / formData.price) *
+                          100
+                        ).toFixed(0)}
+                        % off
                       </p>
                     )}
                   </div>
@@ -536,19 +631,21 @@ const CourseForm = () => {
                   <div className="p-2 bg-purple-100 rounded-lg mr-3">
                     <Upload className="w-5 h-5 text-purple-600" />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-800">Course Thumbnail</h2>
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    Course Thumbnail
+                  </h2>
                 </div>
-                
+
                 <div className="space-y-4">
                   {previewUrl ? (
                     <div className="relative group">
-                      <img 
-                        src={previewUrl} 
-                        alt="Course thumbnail" 
+                      <img
+                        src={previewUrl}
+                        alt="Course thumbnail"
                         className="w-full h-48 object-cover rounded-lg shadow-md"
                       />
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={removeThumbnail}
                         className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
                       >
@@ -577,9 +674,11 @@ const CourseForm = () => {
                       />
                     </label>
                   )}
-                  
+
                   {formErrors.thumbnail && (
-                    <p className="text-sm text-red-600">{formErrors.thumbnail}</p>
+                    <p className="text-sm text-red-600">
+                      {formErrors.thumbnail}
+                    </p>
                   )}
                 </div>
               </div>
@@ -590,9 +689,11 @@ const CourseForm = () => {
                   <div className="p-2 bg-yellow-100 rounded-lg mr-3">
                     <BarChart3 className="w-5 h-5 text-yellow-600" />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-800">Course Settings</h2>
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    Course Settings
+                  </h2>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -605,7 +706,7 @@ const CourseForm = () => {
                       className="w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-4 py-3 transition-colors duration-200"
                     >
                       <option value="">Select Instructor</option>
-                      {instructors.map(instructor => (
+                      {instructors.map((instructor) => (
                         <option key={instructor.id} value={instructor.id}>
                           {instructor.name}
                         </option>
@@ -626,7 +727,9 @@ const CourseForm = () => {
                       <option value="">Select Category</option>
                       <option value="government-exams">Government Exams</option>
                       <option value="professional">Professional Courses</option>
-                      <option value="skill-development">Skill Development</option>
+                      <option value="skill-development">
+                        Skill Development
+                      </option>
                       <option value="competitive">Competitive Exams</option>
                     </select>
                   </div>
@@ -641,7 +744,10 @@ const CourseForm = () => {
                         onChange={handleInputChange}
                         className="h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300"
                       />
-                      <label htmlFor="is_featured" className="ml-2 flex items-center">
+                      <label
+                        htmlFor="is_featured"
+                        className="ml-2 flex items-center"
+                      >
                         <TrendingUp className="w-4 h-4 text-blue-600 mr-2" />
                         <span className="text-gray-700">Featured Course</span>
                       </label>
@@ -656,7 +762,10 @@ const CourseForm = () => {
                         onChange={handleInputChange}
                         className="h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300"
                       />
-                      <label htmlFor="is_active" className="ml-2 flex items-center">
+                      <label
+                        htmlFor="is_active"
+                        className="ml-2 flex items-center"
+                      >
                         <Info className="w-4 h-4 text-green-600 mr-2" />
                         <span className="text-gray-700">Active Course</span>
                       </label>
@@ -668,12 +777,14 @@ const CourseForm = () => {
                       <Info className="w-4 h-4 mr-2" />
                       <span className="text-sm">Course Status</span>
                     </div>
-                    <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                      formData.is_active 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {formData.is_active ? 'Active' : 'Inactive'}
+                    <div
+                      className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                        formData.is_active
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {formData.is_active ? "Active" : "Inactive"}
                     </div>
                   </div>
                 </div>
@@ -685,23 +796,26 @@ const CourseForm = () => {
                   <div className="p-2 bg-blue-500 rounded-lg mr-3">
                     <Save className="w-5 h-5 text-white" />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-800">Save Course</h2>
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    Save Course
+                  </h2>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <h4 className="font-medium text-blue-800 mb-2">Ready to publish</h4>
+                    <h4 className="font-medium text-blue-800 mb-2">
+                      Ready to publish
+                    </h4>
                     <p className="text-sm text-blue-600">
-                      {isEdit 
-                        ? 'Update the course with your changes'
-                        : 'Create and publish this new course'
-                      }
+                      {isEdit
+                        ? "Update the course with your changes"
+                        : "Create and publish this new course"}
                     </p>
                   </div>
 
                   <div className="space-y-3">
-                    <button 
-                      type="submit" 
+                    <button
+                      type="submit"
                       disabled={saving}
                       className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                     >
@@ -710,14 +824,14 @@ const CourseForm = () => {
                       ) : (
                         <>
                           <Save className="w-5 h-5 mr-2" />
-                          {isEdit ? 'Update Course' : 'Create Course'}
+                          {isEdit ? "Update Course" : "Create Course"}
                         </>
                       )}
                     </button>
 
-                    <button 
-                      type="button" 
-                      onClick={() => navigate('/admin/courses')}
+                    <button
+                      type="button"
+                      onClick={() => navigate("/admin/courses.php")}
                       className="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 rounded-lg shadow hover:shadow-md transition-all duration-200"
                     >
                       Cancel

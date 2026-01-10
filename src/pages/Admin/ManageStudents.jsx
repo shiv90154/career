@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 import React, { useState, useEffect, useMemo } from 'react';
-import { api } from '../../services/api';
-=======
-import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
->>>>>>> c815f6ec2039c60c2e3322db983937a3bda31e24
 import { 
   Search, Filter, User, Mail, 
   Phone, Calendar, CheckCircle, 
