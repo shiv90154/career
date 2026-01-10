@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { api } from '../../services/api';
+import api from '../../services/api';
 import { 
   BookOpen, Clock, TrendingUp, 
   Calendar, Award, BarChart, 
@@ -96,75 +96,65 @@ const StudentDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-6">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-              Welcome back, <span className="text-blue-600">{dashboardData?.student?.full_name}!</span>
-            </h1>
-            <p className="text-gray-600 mt-2 flex items-center gap-2">
-              <Zap className="w-4 h-4 text-amber-500" />
-              Keep learning and track your progress
-            </p>
+    <div className="student-dashboard">
+      <div className="dashboard-header">
+        <h1>Welcome back, {dashboardData?.student?.full_name}!</h1>
+        <p className="welcome-message">
+          Keep learning and track your progress
+        </p>
+      </div>
+
+      {/* Stats Overview */}
+      <div className="stats-overview">
+        <div className="stat-card">
+          <div className="stat-icon">
+            <BookOpen size={24} />
           </div>
-          <div className="hidden md:flex items-center gap-3">
-            <span className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full text-sm font-medium">
-              {dashboardData?.student?.batch || 'Batch 2024'}
-            </span>
+          <div className="stat-content">
+            <h3>{dashboardData?.stats?.enrolled_courses || 0}</h3>
+            <p>Enrolled Courses</p>
           </div>
         </div>
-        
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-          {statCards.map((stat, index) => (
-            <div 
-              key={index}
-              className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 text-sm font-medium">{stat.title}</p>
-                  <h3 className="text-3xl font-bold text-gray-900 mt-2">{stat.value}</h3>
-                  {stat.trend && (
-                    <div className={`flex items-center gap-1 mt-2 ${stat.trend > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {stat.trend > 0 ? (
-                        <TrendingUp className="w-4 h-4" />
-                      ) : (
-                        <TrendingDown className="w-4 h-4" />
-                      )}
-                      <span className="text-sm font-medium">{Math.abs(stat.trend)}% from last week</span>
-                    </div>
-                  )}
-                </div>
-                <div className={`p-3 rounded-xl ${stat.bgColor}`}>
-                  <stat.icon className={`w-6 h-6 ${stat.textColor}`} />
-                </div>
-              </div>
-            </div>
-          ))}
+
+        <div className="stat-card">
+          <div className="stat-icon">
+            <Clock size={24} />
+          </div>
+          <div className="stat-content">
+            <h3>{dashboardData?.stats?.study_hours || 0}h</h3>
+            <p>Total Study Time</p>
+          </div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-icon">
+            <TrendingUp size={24} />
+          </div>
+          <div className="stat-content">
+            <h3>{dashboardData?.stats?.completion_rate || 0}%</h3>
+            <p>Overall Progress</p>
+          </div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-icon">
+            <Award size={24} />
+          </div>
+          <div className="stat-content">
+            <h3>{dashboardData?.stats?.tests_completed || 0}</h3>
+            <p>Tests Completed</p>
+          </div>
         </div>
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Course Progress */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Course Progress Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <BookOpen className="w-5 h-5 text-blue-600" />
-                  Course Progress
-                </h2>
-                <p className="text-gray-600 text-sm mt-1">Track your learning journey</p>
-              </div>
-              <Link 
-                to="/student/courses" 
-                className="flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium text-sm"
-              >
+      {/* Main Content */}
+      <div className="dashboard-main">
+        <div className="left-column">
+          {/* Course Progress */}
+          <div className="section-card">
+            <div className="section-header">
+              <h2>Course Progress</h2>
+              <Link to="/student/courses" className="view-all">
                 View All
                 <ChevronRight className="w-4 h-4" />
               </Link>
@@ -172,55 +162,31 @@ const StudentDashboard = () => {
             
             <div className="space-y-4">
               {dashboardData?.recent_courses?.map((course) => (
-                <div 
-                  key={course.id} 
-                  className="group hover:bg-gray-50 p-4 rounded-xl transition-all duration-300 border border-gray-100 hover:border-gray-200"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                          <BookOpen className="w-5 h-5 text-white" />
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-gray-900">{course.title}</h4>
-                          <p className="text-gray-600 text-sm mt-1">{course.course_code}</p>
-                        </div>
-                      </div>
-                      
-                      <div className="mt-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm text-gray-600">Progress</span>
-                          <span className="text-sm font-semibold text-gray-900">
-                            {course.progress_percentage}%
-                          </span>
-                        </div>
-                        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-500"
-                            style={{ width: `${course.progress_percentage}%` }}
-                          ></div>
-                        </div>
-                        <div className="flex items-center justify-between mt-2">
-                          <span className="text-xs text-gray-500">
-                            {course.completed_videos} of {course.total_videos} videos completed
-                          </span>
-                          {course.last_accessed && (
-                            <span className="text-xs text-gray-500">
-                              Last accessed: {formatDate(course.last_accessed)}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <Link 
-                      to={`/student/courses/${course.id}`}
-                      className="ml-4 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:-translate-y-0.5 text-sm font-medium"
-                    >
-                      Continue
-                    </Link>
+                <div key={course.id} className="course-progress-item">
+                  <div className="course-info">
+                    <h4>{course.title}</h4>
+                    <p className="course-code">{course.course_code}</p>
                   </div>
+                  
+                  <div className="progress-section">
+                    <div className="progress-bar">
+                      <div 
+                        className="progress-fill" 
+                        style={{ width: `${course.progress_percentage}%` }}
+                      ></div>
+                    </div>
+                    <div className="progress-stats">
+                      <span>{course.progress_percentage}% complete</span>
+                      <span>{course.completed_videos}/{course.total_videos} videos</span>
+                    </div>
+                  </div>
+
+                  <Link 
+                    to={`/student/courses/${course.id}`}
+                    className="btn btn-sm btn-outline"
+                  >
+                    Continue
+                  </Link>
                 </div>
               ))}
             </div>
@@ -228,19 +194,10 @@ const StudentDashboard = () => {
 
           {/* Upcoming Live Classes */}
           {dashboardData?.upcoming_live_classes?.length > 0 && (
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                    <Users className="w-5 h-5 text-purple-600" />
-                    Upcoming Live Classes
-                  </h2>
-                  <p className="text-gray-600 text-sm mt-1">Join interactive sessions</p>
-                </div>
-                <Link 
-                  to="/student/live-classes" 
-                  className="flex items-center gap-1 text-purple-600 hover:text-purple-700 font-medium text-sm"
-                >
+            <div className="section-card">
+              <div className="section-header">
+                <h2>Upcoming Live Classes</h2>
+                <Link to="/student/live-classes" className="view-all">
                   View All
                   <ChevronRight className="w-4 h-4" />
                 </Link>
@@ -248,44 +205,37 @@ const StudentDashboard = () => {
               
               <div className="space-y-4">
                 {dashboardData.upcoming_live_classes.map((liveClass) => (
-                  <div 
-                    key={liveClass.id} 
-                    className="p-4 rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-100 hover:border-purple-200 transition-all duration-300"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                            <Calendar className="w-6 h-6 text-white" />
-                          </div>
-                          <div>
-                            <h4 className="font-semibold text-gray-900">{liveClass.title}</h4>
-                            <p className="text-gray-600 text-sm">{liveClass.course_title}</p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center gap-6">
-                          <div className="flex items-center gap-2">
-                            <ClockIcon className="w-4 h-4 text-gray-500" />
-                            <span className="text-sm text-gray-600">
-                              {formatDate(liveClass.scheduled_date)} • {formatTime(liveClass.scheduled_date)}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4 text-gray-500" />
-                            <span className="text-sm text-gray-600">{liveClass.duration_minutes} mins</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Users className="w-4 h-4 text-gray-500" />
-                            <span className="text-sm text-gray-600">{liveClass.attendance_count || 0} attending</span>
-                          </div>
-                        </div>
+                  <div key={liveClass.id} className="live-class-item">
+                    <div className="class-time">
+                      <Calendar size={16} />
+                      <div className="time-details">
+                        <strong>{formatDate(liveClass.scheduled_date)}</strong>
+                        <span>{formatTime(liveClass.scheduled_date)}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="class-info">
+                      <h4>{liveClass.title}</h4>
+                      <p className="course-name">{liveClass.course_title}</p>
+                      <div className="class-meta">
+                        <span>
+                          <ClockIcon size={14} />
+                          {liveClass.duration_minutes} mins
+                        </span>
+                        <span>
+                          <Users size={14} />
+                          {liveClass.attendance_count || 0} attending
+                        </span>
                       </div>
                       
                       <button className="ml-4 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:-translate-y-0.5 text-sm font-medium">
                         Join Class
                       </button>
                     </div>
+                    
+                    <button className="btn btn-sm btn-primary">
+                      Join Class
+                    </button>
                   </div>
                 ))}
               </div>
@@ -296,34 +246,23 @@ const StudentDashboard = () => {
         {/* Right Column */}
         <div className="space-y-6">
           {/* Recent Activity */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <div className="mb-6">
-              <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <Target className="w-5 h-5 text-green-600" />
-                Recent Activity
-              </h2>
-              <p className="text-gray-600 text-sm mt-1">Your learning timeline</p>
+          <div className="section-card">
+            <div className="section-header">
+              <h2>Recent Activity</h2>
             </div>
             
             <div className="space-y-4">
               {dashboardData?.recent_activity?.map((activity) => (
-                <div 
-                  key={activity.id} 
-                  className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200"
-                >
-                  <div className={`p-2 rounded-lg ${
-                    activity.type === 'video' ? 'bg-blue-100' : 
-                    activity.type === 'test' ? 'bg-amber-100' : 
-                    'bg-green-100'
-                  }`}>
-                    {activity.type === 'video' && <PlayCircle className="w-4 h-4 text-blue-600" />}
-                    {activity.type === 'test' && <BarChart className="w-4 h-4 text-amber-600" />}
-                    {activity.type === 'material' && <FileText className="w-4 h-4 text-green-600" />}
+                <div key={activity.id} className="activity-item">
+                  <div className="activity-icon">
+                    {activity.type === 'video' && <PlayCircle size={16} />}
+                    {activity.type === 'test' && <BarChart size={16} />}
+                    {activity.type === 'material' && <FileText size={16} />}
                   </div>
                   
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-800">{activity.description}</p>
-                    <span className="text-xs text-gray-500 mt-1 block">
+                  <div className="activity-content">
+                    <p>{activity.description}</p>
+                    <span className="activity-time">
                       {new Date(activity.created_at).toLocaleDateString('en-IN', {
                         month: 'short',
                         day: 'numeric',
@@ -338,19 +277,10 @@ const StudentDashboard = () => {
           </div>
 
           {/* Test Performance */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <BarChart className="w-5 h-5 text-amber-600" />
-                  Test Performance
-                </h2>
-                <p className="text-gray-600 text-sm mt-1">Recent assessment results</p>
-              </div>
-              <Link 
-                to="/student/tests" 
-                className="flex items-center gap-1 text-amber-600 hover:text-amber-700 font-medium text-sm"
-              >
+          <div className="section-card">
+            <div className="section-header">
+              <h2>Test Performance</h2>
+              <Link to="/student/tests" className="view-all">
                 View All
                 <ChevronRight className="w-4 h-4" />
               </Link>
@@ -359,28 +289,19 @@ const StudentDashboard = () => {
             {dashboardData?.recent_tests?.length > 0 ? (
               <div className="space-y-4">
                 {dashboardData.recent_tests.map((test) => (
-                  <div key={test.id} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-900">{test.title}</h4>
-                      <p className="text-sm text-gray-600 mt-1">
-                        {new Date(test.completed_at).toLocaleDateString('en-IN', {
-                          month: 'short',
-                          day: 'numeric'
-                        })}
+                  <div key={test.id} className="test-result">
+                    <div className="test-info">
+                      <h4>{test.title}</h4>
+                      <p className="test-date">
+                        {new Date(test.completed_at).toLocaleDateString('en-IN')}
                       </p>
                     </div>
                     
-                    <div className="flex flex-col items-center">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center border-4 ${
-                        test.passed 
-                          ? 'border-green-200 bg-green-50 text-green-700' 
-                          : 'border-red-200 bg-red-50 text-red-700'
-                      }`}>
-                        <span className="font-bold text-lg">{test.score || 0}%</span>
+                    <div className="test-score">
+                      <div className={`score-circle ${test.passed ? 'passed' : 'failed'}`}>
+                        <span>{test.score || 0}%</span>
                       </div>
-                      <span className={`text-xs font-medium mt-1 ${
-                        test.passed ? 'text-green-600' : 'text-red-600'
-                      }`}>
+                      <span className="score-status">
                         {test.passed ? 'Passed' : 'Failed'}
                       </span>
                     </div>
@@ -388,15 +309,9 @@ const StudentDashboard = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-8">
-                <div className="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                  <BarChart className="w-8 h-8 text-gray-400" />
-                </div>
-                <p className="text-gray-600 mb-4">No test results yet</p>
-                <Link 
-                  to="/student/courses" 
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 text-sm font-medium"
-                >
+              <div className="empty-state small">
+                <p>No test results yet</p>
+                <Link to="/student/courses" className="btn btn-sm btn-outline">
                   Take a Test
                 </Link>
               </div>
@@ -404,71 +319,37 @@ const StudentDashboard = () => {
           </div>
 
           {/* Quick Links */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <div className="mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Quick Links</h2>
-              <p className="text-gray-600 text-sm mt-1">Access important sections</p>
+          <div className="section-card">
+            <div className="section-header">
+              <h2>Quick Links</h2>
             </div>
             
-            <div className="grid grid-cols-2 gap-3">
-              <Link 
-                to="/student/courses" 
-                className="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 hover:border-blue-300 hover:shadow-md transition-all duration-300 group"
-              >
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-3">
-                  <BookOpen className="w-5 h-5 text-white" />
-                </div>
-                <span className="font-medium text-gray-900">My Courses</span>
-                <ChevronRight className="w-4 h-4 text-gray-400 mt-1 group-hover:translate-x-1 transition-transform duration-300" />
+            <div className="quick-links">
+              <Link to="/student/courses" className="quick-link">
+                <BookOpen size={20} />
+                <span>My Courses</span>
               </Link>
-              
-              <Link 
-                to="/student/tests" 
-                className="p-4 rounded-xl bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 hover:border-amber-300 hover:shadow-md transition-all duration-300 group"
-              >
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center mb-3">
-                  <BarChart className="w-5 h-5 text-white" />
-                </div>
-                <span className="font-medium text-gray-900">Mock Tests</span>
-                <ChevronRight className="w-4 h-4 text-gray-400 mt-1 group-hover:translate-x-1 transition-transform duration-300" />
+              <Link to="/student/tests" className="quick-link">
+                <BarChart size={20} />
+                <span>Mock Tests</span>
               </Link>
-              
-              <Link 
-                to="/student/materials" 
-                className="p-4 rounded-xl bg-gradient-to-br from-green-50 to-green-100 border border-green-200 hover:border-green-300 hover:shadow-md transition-all duration-300 group"
-              >
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mb-3">
-                  <FileText className="w-5 h-5 text-white" />
-                </div>
-                <span className="font-medium text-gray-900">Study Materials</span>
-                <ChevronRight className="w-4 h-4 text-gray-400 mt-1 group-hover:translate-x-1 transition-transform duration-300" />
+              <Link to="/student/materials" className="quick-link">
+                <FileText size={20} />
+                <span>Study Materials</span>
               </Link>
-              
-              <Link 
-                to="/student/live-classes" 
-                className="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 hover:border-purple-300 hover:shadow-md transition-all duration-300 group"
-              >
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-3">
-                  <Users className="w-5 h-5 text-white" />
-                </div>
-                <span className="font-medium text-gray-900">Live Classes</span>
-                <ChevronRight className="w-4 h-4 text-gray-400 mt-1 group-hover:translate-x-1 transition-transform duration-300" />
+              <Link to="/student/live-classes" className="quick-link">
+                <Users size={20} />
+                <span>Live Classes</span>
               </Link>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Continue Learning */}
-      <div className="mt-6 bg-white rounded-2xl shadow-lg p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-              <Bookmark className="w-5 h-5 text-red-600" />
-              Continue Learning
-            </h2>
-            <p className="text-gray-600 text-sm mt-1">Pick up where you left off</p>
-          </div>
+      {/* Study Recommendations */}
+      <div className="section-card">
+        <div className="section-header">
+          <h2>Continue Learning</h2>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -476,48 +357,27 @@ const StudentDashboard = () => {
             <Link 
               key={item.id}
               to={`/student/courses/${item.course_id}/learn`}
-              className="group p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300"
+              className="recommendation-card"
             >
-              <div className="flex items-start gap-3 mb-4">
-                <div className={`p-2 rounded-lg ${
-                  item.type === 'video' ? 'bg-blue-100' : 'bg-green-100'
-                }`}>
-                  {item.type === 'video' ? (
-                    <PlayCircle className="w-5 h-5 text-blue-600" />
-                  ) : (
-                    <FileText className="w-5 h-5 text-green-600" />
-                  )}
+              <div className="recommendation-header">
+                <div className="recommendation-icon">
+                  {item.type === 'video' && <PlayCircle size={20} />}
+                  {item.type === 'material' && <FileText size={20} />}
                 </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
-                    {item.title}
-                  </h4>
-                  <p className="text-sm text-gray-600 mt-1">{item.course_title}</p>
+                <div className="recommendation-info">
+                  <h4>{item.title}</h4>
+                  <p className="course-name">{item.course_title}</p>
                 </div>
               </div>
               
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-gray-600">Progress</span>
-                  <span className="text-sm font-semibold text-gray-900">
-                    {item.progress || 0}%
-                  </span>
-                </div>
-                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div className="progress-indicator">
+                <div className="progress-bar small">
                   <div 
-                    className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-500"
+                    className="progress-fill" 
                     style={{ width: `${item.progress || 0}%` }}
                   ></div>
                 </div>
-                <div className="flex items-center justify-between mt-3">
-                  <span className="text-xs text-gray-500">
-                    {item.type === 'video' ? 'Video Lesson' : 'Study Material'}
-                  </span>
-                  <div className="flex items-center gap-1 text-amber-500">
-                    <Star className="w-3 h-3 fill-amber-500" />
-                    <span className="text-xs font-medium">{item.difficulty || 'Beginner'}</span>
-                  </div>
-                </div>
+                <span>{item.progress || 0}% complete</span>
               </div>
             </Link>
           ))}

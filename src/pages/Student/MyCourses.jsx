@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { api } from '../../services/api';
+import api  from '../../services/api';
 import { 
   PlayCircle, Clock, BookOpen, 
   TrendingUp, BarChart, Award,

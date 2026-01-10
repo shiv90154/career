@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
-import { Save, Upload, X, ArrowLeft, Info, Tag, Clock, DollarSign, BarChart3, BookOpen, TrendingUp } from 'lucide-react';
+import { Save, Upload, X } from 'lucide-react';
 import LoadingSpinner from '../../components/Common/LoadingSpinner';
 
 const CourseForm = () => {

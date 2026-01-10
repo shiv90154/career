@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+<<<<<<< HEAD
 import  api  from '../../services/api';
+=======
+import api from '../../services/api';
+>>>>>>> c815f6ec2039c60c2e3322db983937a3bda31e24
 import { 
   Users, BookOpen, Video, FileText, 
   BarChart, CreditCard, Calendar, 
