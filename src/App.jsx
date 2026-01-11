@@ -20,11 +20,6 @@ const Courses = lazy(() => import("./pages/Public/Courses"));
 const CourseDetail = lazy(() => import("./pages/Public/CourseDetail"));
 const Blogs = lazy(() => import("./pages/Public/Blogs"));
 const BlogDetail = lazy(() => import("./pages/Public/BlogDetail"));
-
-// Debug component (only in development)
-const ApiTest = lazy(() => import("./components/Debug/ApiTest"));
-const CorsTest = lazy(() => import("./components/Debug/CorsTest"));
-const CorsVerification = lazy(() => import("./components/Test/CorsVerification"));
 const CurrentAffairs = lazy(() => import("./pages/Public/CurrentAffairs"));
 const CurrentAffairDetail = lazy(() => import("./pages/Public/CurrentAffairDetail"));
 const Tests = lazy(() => import("./pages/Public/Tests"));
@@ -83,9 +78,9 @@ const SecurityProvider = ({ children }) => {
         e.preventDefault();
         return false;
       };
-      
+
       document.addEventListener('contextmenu', handleContextMenu);
-      
+
       return () => {
         document.removeEventListener('contextmenu', handleContextMenu);
       };
@@ -156,18 +151,6 @@ function App() {
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
-              
-              {/* Debug route only in development */}
-              {import.meta.env.DEV && (
-                <Route path="/debug" element={<PublicLayout><ApiTest /></PublicLayout>} />
-              )}
-              {import.meta.env.DEV && (
-                <Route path="/cors-test" element={<PublicLayout><CorsTest /></PublicLayout>} />
-              )}
-              {import.meta.env.DEV && (
-                <Route path="/cors-verify" element={<PublicLayout><CorsVerification /></PublicLayout>} />
-              )}
-              
               <Route path="/courses" element={<PublicLayout><Courses /></PublicLayout>} />
               <Route path="/courses/:id" element={<PublicLayout><CourseDetail /></PublicLayout>} />
               <Route path="/blogs" element={<PublicLayout><Blogs /></PublicLayout>} />
@@ -273,7 +256,7 @@ function App() {
               {/* 404 Route */}
               <Route path="*" element={<PublicLayout><NotFound /></PublicLayout>} />
             </Routes>
-            
+
             {/* Enhanced Toast Configuration */}
             <ToastContainer
               position="top-right"

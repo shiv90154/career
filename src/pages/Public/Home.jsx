@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
-import ApiDebug from "../../components/Debug/ApiDebug";
+
 import {
   PlayCircle,
   Award,
@@ -42,7 +42,7 @@ const Home = () => {
       id: 2,
       image: "public/Images/about2.jpg",
       alt: "Classroom learning environment"
-  
+
     },
     {
       id: 3,
@@ -68,7 +68,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchHomeData();
-    
+
     // Auto slide functionality
     let slideInterval;
     if (isAutoPlaying) {
@@ -76,7 +76,7 @@ const Home = () => {
         nextSlide();
       }, 5000);
     }
-    
+
     return () => {
       if (slideInterval) clearInterval(slideInterval);
     };
@@ -85,12 +85,12 @@ const Home = () => {
   const fetchHomeData = async () => {
     try {
       const [coursesRes, statsRes, testimonialsRes] = await Promise.all([
-        api.get("/public/courses?featured=true&limit=6"),
-        api.get("/public/stats"),
-        api.get("/public/testimonials"),
+        api.get("/courses/index.php?featured=true&limit=6"),
+        api.get("/public/stats.php"),
+        api.get("/public/testimonials.php"),
       ]);
 
-      setFeaturedCourses(coursesRes.data);
+      setFeaturedCourses(coursesRes.data.courses || []);
       setStats(statsRes.data);
       setTestimonials(testimonialsRes.data);
     } catch (error) {
@@ -190,10 +190,7 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Debug Component - Remove in production */}
-      <div className="container mx-auto px-4 py-8">
-        <ApiDebug />
-      </div>
-      
+
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
         {/* Background Pattern */}
@@ -298,11 +295,10 @@ const Home = () => {
                   {heroSlides.map((slide, index) => (
                     <div
                       key={slide.id}
-                      className={`absolute inset-0 transition-opacity duration-1000  ${
-                        index === currentSlide
-                          ? "opacity-100 z-10"
-                          : "opacity-0 z-0"
-                      }`}
+                      className={`absolute inset-0 transition-opacity duration-1000  ${index === currentSlide
+                        ? "opacity-100 z-10"
+                        : "opacity-0 z-0"
+                        }`}
                     >
                       <img
                         src={slide.image}
@@ -312,7 +308,7 @@ const Home = () => {
                       />
                     </div>
                   ))}
-                  
+
                   {/* Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent z-20"></div>
 
@@ -322,20 +318,20 @@ const Home = () => {
                     className="absolute left-4 top-1/2 transform -translate-y-1/2 z-30 p-2 bg-black/30 hover:bg-black/50 backdrop-blur-sm rounded-full transition-all duration-300 group"
                     aria-label="Previous slide"
                   >
-                    <ChevronLeft 
-                      size={24} 
-                      className="text-white group-hover:scale-110 transition-transform" 
+                    <ChevronLeft
+                      size={24}
+                      className="text-white group-hover:scale-110 transition-transform"
                     />
                   </button>
-                  
+
                   <button
                     onClick={nextSlide}
                     className="absolute right-4 top-1/2 transform -translate-y-1/2 z-30 p-2 bg-black/30 hover:bg-black/50 backdrop-blur-sm rounded-full transition-all duration-300 group"
                     aria-label="Next slide"
                   >
-                    <ChevronRight 
-                      size={24} 
-                      className="text-white group-hover:scale-110 transition-transform" 
+                    <ChevronRight
+                      size={24}
+                      className="text-white group-hover:scale-110 transition-transform"
                     />
                   </button>
 
@@ -345,11 +341,10 @@ const Home = () => {
                       <button
                         key={index}
                         onClick={() => goToSlide(index)}
-                        className={`w-2 h-2 rounded-full transition-all duration-100 ${
-                          index === currentSlide
-                            ? "w-8 bg-yellow-500"
-                            : "bg-white/60 hover:bg-white"
-                        }`}
+                        className={`w-2 h-2 rounded-full transition-all duration-100 ${index === currentSlide
+                          ? "w-8 bg-yellow-500"
+                          : "bg-white/60 hover:bg-white"
+                          }`}
                         aria-label={`Go to slide ${index + 1}`}
                       />
                     ))}
@@ -702,7 +697,7 @@ const Home = () => {
                             size={20}
                             className={
                               i <
-                              (testimonials[currentTestimonial]?.rating || 5)
+                                (testimonials[currentTestimonial]?.rating || 5)
                                 ? "text-yellow-400 fill-yellow-400"
                                 : "text-gray-600"
                             }
@@ -727,11 +722,10 @@ const Home = () => {
                       <button
                         key={index}
                         onClick={() => setCurrentTestimonial(index)}
-                        className={`w-2 h-2 rounded-full transition-all ${
-                          index === currentTestimonial
-                            ? "w-8 bg-yellow-500"
-                            : "bg-gray-700 hover:bg-gray-600"
-                        }`}
+                        className={`w-2 h-2 rounded-full transition-all ${index === currentTestimonial
+                          ? "w-8 bg-yellow-500"
+                          : "bg-gray-700 hover:bg-gray-600"
+                          }`}
                       />
                     ))}
                   </div>

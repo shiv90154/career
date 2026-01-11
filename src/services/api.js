@@ -1,154 +1,146 @@
 import axios from "axios";
 
+// Determine base URL based on environment
+const getBaseURL = () => {
+  if (import.meta.env.PROD) {
+    // Production: Use relative path or your production domain
+    return "/career-path-api/api";
+  } else {
+    // Development: Use proxy path
+    return "/career-path-api/api";
+  }
+};
+
 const api = axios.create({
-  baseURL: 'http://localhost/career-path-api/api',
+  baseURL: getBaseURL(),
+  withCredentials: true,
+  timeout: 30000,
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, // Important for httpOnly cookies and CSRF
-  timeout: 30000, // 30 second timeout
 });
 
-// Request interceptor for security headers
+// ---------------- REQUEST INTERCEPTOR ----------------
 api.interceptors.request.use(
   (config) => {
-    // Add security headers
-    config.headers['X-Requested-With'] = 'XMLHttpRequest';
-    
-    // Add CSRF token if available
+    // Security headers
+    config.headers["X-Requested-With"] = "XMLHttpRequest";
+    config.headers["Accept"] = "application/json";
+
+    // CSRF token handling
     const csrfToken = window.csrfToken;
-    if (csrfToken && ['post', 'put', 'patch', 'delete'].includes(config.method)) {
+    if (
+      csrfToken &&
+      ["post", "put", "patch", "delete"].includes(config.method)
+    ) {
       config.data = config.data || {};
       config.data.csrf_token = csrfToken;
     }
-    
+
     return config;
   },
   (error) => {
-    console.error('Request interceptor error:', error);
+    if (import.meta.env.DEV) {
+      console.error("Request interceptor error:", error);
+    }
     return Promise.reject(error);
   }
 );
 
-// Response interceptor for error handling
+// ---------------- RESPONSE INTERCEPTOR ----------------
 api.interceptors.response.use(
   (response) => {
-    // Store CSRF token if provided
+    // Store CSRF token if backend sends new token
     if (response.data?.csrf_token) {
       window.csrfToken = response.data.csrf_token;
     }
-    
     return response;
   },
+
   (error) => {
-    // Handle network errors
     if (!error.response) {
-      console.error('Network error:', error.message);
-      return Promise.reject(new Error('Network error. Please check your connection.'));
+      if (import.meta.env.DEV) {
+        console.error("Network error:", error.message);
+      }
+      return Promise.reject({
+        status: 0,
+        message: "Network error - Please check your connection",
+      });
     }
-    
+
     const { status, data } = error.response;
-    
-    // Handle different error types
-    switch (status) {
-      case 401:
-        // Only redirect for protected endpoints
-        const publicEndpoints = [
-          '/courses/index.php',
-          '/courses/detail.php',
-          '/categories/index.php',
-          '/tests/index.php',
-          '/tests/detail.php',
-          '/current-affairs/index.php',
-          '/current-affairs/detail.php',
-          '/blogs/index.php',
-          '/blogs/detail.php',
-          '/materials/index.php',
-          '/live-classes/index.php',
-          '/auth/csrf-token.php',
-          '/test-cors.php'
-        ];
-        
-        const isPublicEndpoint = publicEndpoints.some(endpoint => 
-          error.config?.url?.includes(endpoint)
-        );
-        
-        if (!isPublicEndpoint) {
-          // Clear any stored auth data
-          localStorage.removeItem("auth_token");
-          localStorage.removeItem("user");
-          
-          // Redirect to login if not already there
-          if (window.location.pathname !== '/login') {
-            window.location.href = "/login";
-          }
+
+    // Public endpoints that should not redirect on 401
+    const publicEndpoints = [
+      "/courses/index.php",
+      "/courses/detail.php",
+      "/categories/index.php",
+      "/tests/index.php",
+      "/tests/detail.php",
+      "/current-affairs/index.php",
+      "/current-affairs/detail.php",
+      "/blogs/index.php",
+      "/blogs/detail.php",
+      "/materials/index.php",
+      "/live-classes/index.php",
+      "/auth/csrf-token.php",
+      "/public/stats.php"
+    ];
+
+    if (status === 401) {
+      const isPublic = publicEndpoints.some((e) =>
+        error.config?.url?.includes(e)
+      );
+      if (!isPublic) {
+        localStorage.removeItem("auth_token");
+        localStorage.removeItem("user");
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
         }
-        break;
-        
-      case 403:
-        console.error('Access forbidden:', data?.message);
-        break;
-        
-      case 429:
-        console.error('Rate limit exceeded:', data?.message);
-        break;
-        
-      case 500:
-        console.error('Server error:', data?.message);
-        break;
-        
-      default:
-        console.error(`HTTP ${status}:`, data?.message);
+      }
     }
-    
-    // Return structured error
-    const errorMessage = data?.message || `HTTP ${status} Error`;
-    const errorDetails = {
+
+    const err = {
       status,
-      message: errorMessage,
-      errors: data?.errors,
-      timestamp: data?.timestamp
+      message: data?.message || `HTTP ${status} Error`,
+      errors: data?.errors || null,
+      timestamp: data?.timestamp || null,
     };
-    
-    return Promise.reject(errorDetails);
+
+    return Promise.reject(err);
   }
 );
 
-// Utility functions for common API patterns
+// ---------------- EXPORT UTILITY FUNCTIONS ----------------
 export const apiUtils = {
-  // Handle file uploads with progress
   uploadFile: (url, formData, onProgress) => {
     return api.post(url, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      headers: { "Content-Type": "multipart/form-data" },
       onUploadProgress: (progressEvent) => {
         if (onProgress) {
-          const percentCompleted = Math.round(
+          const percent = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
           );
-          onProgress(percentCompleted);
+          onProgress(percent);
         }
       },
     });
   },
-  
-  // Retry failed requests
+
   retry: async (apiCall, maxRetries = 3, delay = 1000) => {
     for (let i = 0; i < maxRetries; i++) {
       try {
         return await apiCall();
-      } catch (error) {
-        if (i === maxRetries - 1) throw error;
-        await new Promise(resolve => setTimeout(resolve, delay * (i + 1)));
+      } catch (err) {
+        if (i === maxRetries - 1) throw err;
+        await new Promise((r) => setTimeout(r, delay * (i + 1)));
       }
     }
   },
-  
-  // Batch requests
+
   batch: (requests) => {
-    return Promise.allSettled(requests.map(req => api(req)));
-  }
+    return Promise.allSettled(requests.map((req) => api(req)));
+  },
 };
 
 export default api;

@@ -63,23 +63,23 @@ const Blogs = () => {
   const fetchBlogs = async () => {
     try {
       const [blogsRes, categoriesRes] = await Promise.all([
-        api.get("/public/blogs.php"),
+        api.get("/blogs/public_list.php"),
         api.get("/public/blog-categories.php"),
       ]);
 
-      setBlogs(blogsRes.data);
-      setFilteredBlogs(blogsRes.data);
+      setBlogs(blogsRes.data.blogs || []);
+      setFilteredBlogs(blogsRes.data.blogs || []);
       setCategories(categoriesRes.data);
 
       // Set featured blog (first blog with featured image)
       const featured =
-        blogsRes.data.find((blog) => blog.is_featured) || blogsRes.data[0];
+        (blogsRes.data.blogs || []).find((blog) => blog.is_featured) || (blogsRes.data.blogs || [])[0];
       if (featured) {
         setFeaturedBlog(featured);
       }
 
       // Get popular blogs (by views)
-      const popular = [...blogsRes.data]
+      const popular = [...(blogsRes.data.blogs || [])]
         .sort((a, b) => b.view_count - a.view_count)
         .slice(0, 5);
       setPopularBlogs(popular);
@@ -377,11 +377,10 @@ const Blogs = () => {
 
               <div className="flex flex-wrap gap-3">
                 <button
-                  className={`px-5 py-3 rounded-xl font-medium transition-all duration-300 ${
-                    selectedCategory === "all"
-                      ? "bg-gradient-to-r from-gray-900 to-gray-800 text-white shadow-lg"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                  className={`px-5 py-3 rounded-xl font-medium transition-all duration-300 ${selectedCategory === "all"
+                    ? "bg-gradient-to-r from-gray-900 to-gray-800 text-white shadow-lg"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
                   onClick={() => setSelectedCategory("all")}
                 >
                   All Articles
@@ -390,11 +389,10 @@ const Blogs = () => {
                 {categories.map((category) => (
                   <button
                     key={category.id}
-                    className={`px-5 py-3 rounded-xl font-medium transition-all duration-300 ${
-                      selectedCategory === category.slug
-                        ? "bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 shadow-lg"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
+                    className={`px-5 py-3 rounded-xl font-medium transition-all duration-300 ${selectedCategory === category.slug
+                      ? "bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 shadow-lg"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
                     onClick={() => setSelectedCategory(category.slug)}
                   >
                     <div className="flex items-center space-x-2">
@@ -561,11 +559,10 @@ const Blogs = () => {
                       <button
                         key={index}
                         onClick={() => paginate(index + 1)}
-                        className={`w-10 h-10 rounded-lg font-medium ${
-                          currentPage === index + 1
-                            ? "bg-gradient-to-r from-yellow-500 to-yellow-600 text-white"
-                            : "border border-gray-300 hover:bg-gray-100"
-                        }`}
+                        className={`w-10 h-10 rounded-lg font-medium ${currentPage === index + 1
+                          ? "bg-gradient-to-r from-yellow-500 to-yellow-600 text-white"
+                          : "border border-gray-300 hover:bg-gray-100"
+                          }`}
                       >
                         {index + 1}
                       </button>
