@@ -15,7 +15,7 @@ export default function BlogList() {
         <div key={blog.slug} className="blog-card">
           <h2>{blog.title}</h2>
           <p>{blog.excerpt}</p>
-          <Link to={`/blog/${blog.slug}`}>Read More</Link>
+          <Link to={`/blogs/${blog.slug}`}>Read More</Link>
         </div>
       ))}
     </div>

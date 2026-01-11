@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
+import ApiDebug from "../../components/Debug/ApiDebug";
 import {
   PlayCircle,
   Award,
@@ -83,12 +84,11 @@ const Home = () => {
 
   const fetchHomeData = async () => {
     try {
- const [coursesRes, statsRes, testimonialsRes] = await Promise.all([
-  api.get("/public/courses.php?featured=true&limit=6"),
-  api.get("/public/stats.php"),
-  api.get("/public/testimonials.php"),
-]);
-
+      const [coursesRes, statsRes, testimonialsRes] = await Promise.all([
+        api.get("/public/courses?featured=true&limit=6"),
+        api.get("/public/stats"),
+        api.get("/public/testimonials"),
+      ]);
 
       setFeaturedCourses(coursesRes.data);
       setStats(statsRes.data);
@@ -189,6 +189,11 @@ const Home = () => {
 
   return (
     <div className="min-h-screen">
+      {/* Debug Component - Remove in production */}
+      <div className="container mx-auto px-4 py-8">
+        <ApiDebug />
+      </div>
+      
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
         {/* Background Pattern */}
